@@ -11,12 +11,13 @@ VERILATOR_FLAGS += -Wall
 #文件存放目录
 
 
+
 all:sim
 	@echo "Write this Makefile by your self."
 
-sim:main.cpp example.v 
+sim:sim_main.cpp top.v 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
-	verilator $(VERILATOR_FLAGS) main.cpp example.v
+	verilator $(VERILATOR_FLAGS) main.cpp example.v 
 
 include ../Makefile
