@@ -18,6 +18,6 @@ all:sim
 sim:sim_main.cpp top.v 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
-	verilator $(VERILATOR_FLAGS) main.cpp example.v 
+	verilator $(VERILATOR_FLAGS) $^ 
 
 include ../Makefile
