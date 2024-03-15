@@ -39,3 +39,7 @@ sim: $(CSRCS) $(VSRCS) $(NVBOARD_ARCHIVE)
 		$(addprefix -CFLAGS , $(CFLAGS)) \
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		-Mdir $(OBJ_DIR) --exe -o $(abspath $(BIN))
+
+.PHONY: all sim
+
+include ../Makefile
