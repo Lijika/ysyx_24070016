@@ -68,7 +68,9 @@ static int cmd_info(char *args) {
 	int num_info_args = strlen(info_args);
 	int i;
 	for ( i = 0; i < num_info_args; i++) {
-		if (strcmp(args, &info_args[i]) == 0) {
+		if (args == NULL) { 
+			printf("info:Missing args. \n'info r'-prints register status. \n'info w'-prints watchpoint information.");
+		} else if (strcmp(args, &info_args[i]) == 0) {
 			switch (i) {
 			case 0: isa_reg_display();	//info r
 
