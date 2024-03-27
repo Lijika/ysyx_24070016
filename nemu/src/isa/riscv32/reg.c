@@ -24,7 +24,10 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
-	printf("reg name: %s, val is %d", regs[3], *regs[3]);
+	int i;
+	for (i = 0;i < ARRLEN(regs);i++){
+	printf("%s /t 0x%12x /t %d /n", regs[i], *regs[i], *regs[i]);
+	}
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
