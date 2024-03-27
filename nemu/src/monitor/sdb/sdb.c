@@ -61,7 +61,7 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args) {
 	char info_args [] = {
-		"r"
+		"r"		//info r
 
 	};
 
@@ -81,6 +81,13 @@ static int cmd_info(char *args) {
 	return 0;
 }
 
+// static int cmd_x(char *args) {
+// 	char *cmd = strtok(str, " ");
+// 	if (cmd == NULL) {
+// 		printf(""); 
+// 	}
+// }
+
 static int cmd_help(char *args);
 
 static struct {
@@ -93,6 +100,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Lets the program pause after executing N instructions in a single step, when N is not given, the default is 1.", cmd_si },
   { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
+//   { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
 
   /* TODO: Add more commands */
 
