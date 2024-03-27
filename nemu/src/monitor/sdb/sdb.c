@@ -59,6 +59,31 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
+static int cmd_info(char *args) {
+	char info_args [] = {
+		"r"
+
+	};
+
+	int num_info_args = strlen(info_args);
+	int i;
+	for ( i = 0; i < num_info_args; i++) {
+		if (strcmp(args, &info_args[i]) == 0) {
+			switch (i) {
+			case 0: isa_reg_display();
+				break;
+			
+			default: printf("Unknown command 'info %s'\n", args);
+				break;
+			
+			break;
+			}
+		}
+	}
+	return 0;
+	
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -70,6 +95,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Lets the program pause after executing N instructions in a single step, when N is not given, the default is 1.", cmd_si },
+  { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
 
   /* TODO: Add more commands */
 
