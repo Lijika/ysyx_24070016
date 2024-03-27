@@ -70,18 +70,15 @@ static int cmd_info(char *args) {
 	for ( i = 0; i < num_info_args; i++) {
 		if (strcmp(args, &info_args[i]) == 0) {
 			switch (i) {
-			case 0: isa_reg_display();
-				break;
-			
-			default: printf("Unknown command 'info %s'\n", args);
-				break;
-			
-			break;
+			case 0: isa_reg_display();	//info r
+
 			}
+			break;
+		} else {
+			printf("Unknown command 'info %s'\n", args);
 		}
 	}
 	return 0;
-	
 }
 
 static int cmd_help(char *args);
