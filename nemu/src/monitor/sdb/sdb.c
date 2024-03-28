@@ -110,6 +110,7 @@ static int cmd_x(char *args) {
 		for(int i = 0; i <= 4; i ++) {
 			mem_val = paddr_read(args_addr, 1);
 			printf(" \t%#x", mem_val);
+			args_addr = args_addr + 1;
 		}
 		printf("\n");
 	}
