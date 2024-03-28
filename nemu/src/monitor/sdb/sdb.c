@@ -107,12 +107,12 @@ static int cmd_x(char *args) {
 	int N = atoi(x_args_Num);
 	for(; N >= 1; N--){
 		printf("%#x:", args_addr);
-		for(int i = 0; i < 4; i ++) {
-			mem_val = paddr_read(args_addr, 1);
+		for(int i = 3; i >= 0; i --) {
+			mem_val = paddr_read(args_addr + i, 1);
 			printf(" \t%#x", mem_val);
-			args_addr++;
 		}
 		printf("\n");
+		args_addr = args_addr + 4;
 	}
 	return 0;
 }
