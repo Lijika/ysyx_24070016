@@ -69,13 +69,12 @@ static int cmd_info(char *args) {
 	int i;
 	for ( i = 0; i < num_info_args; i++) {
 		if (args == NULL) { 
-			printf("info:Missing args. \n'info r'-prints register status. \n'info w'-prints watchpoint information. \n");
+			printf("info:Missing args. \n'info r'--prints register status. \n'info w'--prints watchpoint information. \n");
 		} else if (strcmp(args, &info_args[i]) == 0) {
 			switch (i) {
 			case 0: isa_reg_display();	//info r
 
 			}
-			break;
 		} else {
 			printf("Unknown command 'info %s'\n", args);
 		}
@@ -83,12 +82,39 @@ static int cmd_info(char *args) {
 	return 0;
 }
 
-// static int cmd_x(char *args) {
-// 	char *cmd = strtok(str, " ");
-// 	if (cmd == NULL) {
-// 		printf(""); 
-// 	}
-// }
+static int cmd_x(char *args) {
+	char *x_args_str_end = args + strlen(args);
+
+	char *x_args_Num = strtok(args, " ");
+	if (x_args_Num == NULL) {
+		printf("x:Missing args N. \n");
+		printf("'x N EXPR'--Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.\n");
+		return 0;
+	}
+
+	char *x_args_EXPR = x_args_Num + strlen(x_args_Num) + 1;
+	if (x_args_EXPR >= x_args_str_end) {
+		printf("x:Missing args EXPR. \n");
+		printf("'x N EXPR'--Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.\n");
+		return 0;
+	}
+
+	// cmd_table[6].handler(x_args_EXPR);
+
+	word_t paddr_read(paddr_t addr, int len);
+	word_t mem_val;
+	paddr_t args_addr = 0x80000000; //temp
+	int N = atoi(x_args_Num);
+	for(; N >= 1; N--){
+		printf("%#x:", args_addr);
+		for(int i = 0; i <= 4; i ++) {
+			mem_val = paddr_read(args_addr, 1);
+			printf(" \t%#x", mem_val);
+		}
+		printf("\n");
+	}
+	return 0;
+}
 
 static int cmd_help(char *args);
 
@@ -102,7 +128,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Lets the program pause after executing N instructions in a single step, when N is not given, the default is 1.", cmd_si },
   { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
-//   { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
+  { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
 
   /* TODO: Add more commands */
 
