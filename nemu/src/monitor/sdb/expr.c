@@ -103,7 +103,7 @@ static bool make_token(char *e) {
          */
 
 		if(substr_len >= 32) {
-			printf("EXPR: tokens.str overflow.");
+			printf("EXPR: tokens.str overflow.\n");
 			assert(0);
 		}
 
@@ -114,6 +114,7 @@ static bool make_token(char *e) {
 		  	tokens[nr_token].type = rules[i].token_type;
 			strncpy(tokens[nr_token].str, substr_start, substr_len);
 			tokens[nr_token].str[substr_len] = '\0';
+			printf("tokens[%d].str = %s \n", nr_token, tokens[nr_token].str);
 		  	nr_token++;
         }
 
