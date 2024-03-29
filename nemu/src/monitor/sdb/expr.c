@@ -19,9 +19,10 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include <string.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_INT_NUM
 
   /* TODO: Add more token types */
 
@@ -38,6 +39,13 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
+  {"-", '-'},			//minus
+  {"\\*", '*'},			//multiply
+  {"\\/", '/'},			//divided
+  {"\\(", '('},
+  {"\\)", ')'},
+  {"[0-9]+", TK_INT_NUM},
+
   {"==", TK_EQ},        // equal
 };
 
@@ -94,8 +102,19 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
+		if(substr_len >= 32) {
+			printf("EXPR: tokens.str overflow.");
+			assert(0);
+		}
+
         switch (rules[i].token_type) {
-          default: TODO();
+		  case TK_NOTYPE: break;
+		  
+          default:
+		  	tokens[nr_token].type = rules[i].token_type;
+			strncpy(tokens[nr_token].str, substr_start, substr_len);
+			tokens[nr_token].str[substr_len] = '\0';
+		  	nr_token++;
         }
 
         break;

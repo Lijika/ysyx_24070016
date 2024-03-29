@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <stdbool.h>
 
 static int is_batch_mode = false;
 
@@ -117,6 +118,13 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_p(char *args) {
+	// word_t expr(char *e, bool *success);
+	bool f = true;
+	expr(args, &f);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -130,6 +138,7 @@ static struct {
   { "si", "Lets the program pause after executing N instructions in a single step, when N is not given, the default is 1.", cmd_si },
   { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
   { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
+  { "p", "Find the value of the expression EXPR", cmd_p},
 
   /* TODO: Add more commands */
 
