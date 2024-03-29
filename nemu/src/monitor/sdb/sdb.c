@@ -83,14 +83,14 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-	char *x_args_str_end = args + strlen(args);
-
-	char *x_args_Num = strtok(args, " ");
-	if (x_args_Num == NULL) {
+	if (args == NULL) {
 		printf("x:Missing args N. \n");
 		printf("'x N EXPR'--Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.\n");
 		return 0;
 	}
+
+	char *x_args_str_end = args + strlen(args);
+	char *x_args_Num = strtok(args, " ");
 
 	char *x_args_EXPR = x_args_Num + strlen(x_args_Num) + 1;
 	if (x_args_EXPR >= x_args_str_end) {
