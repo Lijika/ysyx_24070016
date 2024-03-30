@@ -156,7 +156,7 @@ int check_parentheses(int p, int q) {
 			count++;
 		} else if (tokens[p].type == ')') {
 			count--;
-		} else { continue; }
+		}
 
 		if ((count == 0) && (p < q)) { return false; }
 		
