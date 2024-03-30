@@ -144,3 +144,84 @@ word_t expr(char *e, bool *success) {
 
   return 0;
 }
+
+int check_parentheses(int p, int q) {
+	if ((tokens[p].type != '(') || (tokens[q].type != ')')) { return false; }
+
+	int count = 0;
+	while (p <= q) {
+		if (tokens[p].type == '(') {
+			count++;
+		} else if (tokens[p].type == ')') {
+			count--;
+		} else { continue; }
+
+		if ((count == 0) && (p < q)) { return false; }
+		
+		p++;
+	}
+
+	if (count != 0) {return false; }
+	return true;
+}
+
+int search_main_token_position (int p, int q) {
+	int position_t = 0;
+	while (q >= p){
+		if (tokens[q].type == ')') {
+			int right = q;
+			q--;
+			while (check_parentheses(q, right) == false) { q--; }
+			continue;
+		} else if ((tokens[q].type != '+') 
+			&& (tokens[q].type != '-')
+			&& (tokens[q].type != '*')
+			&& (tokens[q].type != '/')) { 
+			q--;
+			continue; 
+		}
+		
+		if ((tokens[q].type == '+') || (tokens[q].type == '-')) {
+			return q;
+		} else {
+			position_t = q;
+			q--;
+		}
+	}
+	return position_t;
+}
+
+#define BAD_EXPREESION -1
+
+word_t eval(int p, int q) {
+  if (p > q) {
+    /* Bad expression */
+	return BAD_EXPREESION;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+	return atoi(tokens[p].str);
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    int op = search_main_token_position(p, q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
+
+    switch (tokens[op].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': return val1 / val2;
+      default: assert(0);
+    }
+  }
+}
