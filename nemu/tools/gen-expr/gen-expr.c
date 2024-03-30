@@ -21,8 +21,9 @@
 #include <string.h>
 
 // this should be enough
-static char buf[65536] = {};
-static char code_buf[65536 + 128] = {}; // a little larger than `buf`
+int size = 65536;
+static char *buf = (char *)malloc(size * sizeof(char));
+static char *code_buf = (char *)malloc((size + 128) * sizeof(char)); // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -35,8 +36,43 @@ uint32_t choose (uint32_t n) {
 	return rand() % n;
 }
 
+int buf_pt;
+
+static void enbuf (char s) {
+	if (buf_pt == size) {
+		buf = realloc(buf, size * 2);
+		code_buf = realloc(code_buf, size * 2 + 128);
+	}
+	buf[buf_pt] = s;
+	buf_pt++;
+}
+
+static void gen_num() {
+	char num;
+	sprintf(&num, "%d", rand());
+	enbuf(num);
+}
+
+static void gen_tk(char s) {
+	enbuf(s);
+} 
+
+static void gen_rand_op() {
+	switch (choose(3)) {
+		case 0: gen_tk('+');
+		case 1: gen_tk('-');
+		case 2: gen_tk('*');
+		case 3: gen_tk('/');
+	}
+}
+
 static void gen_rand_expr() {
-  buf[0] = '\0';
+	switch (choose(3)) {
+		case 0: gen_num(); break;
+		case 1: gen_tk('('); gen_rand_expr(); gen_tk(')'); break;
+		case 2: gen_tk(' ');
+		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+	}
 }
 
 int main(int argc, char *argv[]) {
@@ -48,6 +84,7 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+	buf_pt = 0;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
