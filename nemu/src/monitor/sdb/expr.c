@@ -142,7 +142,7 @@ word_t expr(char *e, bool *success) {
 //   assert(0);
   /* TODO: Insert codes to evaluate the expression. */
   word_t expr_res;
-  expr_res = eval(0, nr_token);
+  expr_res = eval(0, nr_token - 1);
 
   return expr_res;
 }
