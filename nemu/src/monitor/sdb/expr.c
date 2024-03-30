@@ -131,6 +131,7 @@ static bool make_token(char *e) {
   return true;
 }
 
+word_t eval(int p, int q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -138,11 +139,11 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
 
-  assert(0);
+//   assert(0);
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  
 
-  return 0;
+  return eval(0, nr_token);
 }
 
 int check_parentheses(int p, int q) {
