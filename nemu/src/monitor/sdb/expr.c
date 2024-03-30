@@ -104,7 +104,7 @@ static bool make_token(char *e) {
 
 		if(substr_len >= 32) {
 			printf("EXPR: tokens.str overflow.\n");
-			assert(0);
+			return false;
 		}
 
         switch (rules[i].token_type) {

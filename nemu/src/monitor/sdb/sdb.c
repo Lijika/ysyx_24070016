@@ -123,7 +123,11 @@ static int cmd_p(char *args) {
 	bool f = true;
 	word_t p_EXPR_res;
 	p_EXPR_res = expr(args, &f);
-	printf("EXPR result = %d", p_EXPR_res);
+	if (f != true) {
+		Log("BAD EXPRESSION");
+	} else {
+		printf("EXPR result = %d \n", p_EXPR_res);
+	} 	
 	return 0;
 }
 
