@@ -121,7 +121,9 @@ static int cmd_x(char *args) {
 static int cmd_p(char *args) {
 	// word_t expr(char *e, bool *success);
 	bool f = true;
-	expr(args, &f);
+	word_t p_EXPR_res;
+	p_EXPR_res = expr(args, &f);
+	printf("EXPR result = %d", p_EXPR_res);
 	return 0;
 }
 
