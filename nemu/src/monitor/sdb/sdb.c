@@ -119,6 +119,7 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p_test() {
+	int expr_count = 0;
 	bool expr_f = true;
 	char test_res[20];
 	char test_expr[65536];
@@ -130,6 +131,7 @@ static int cmd_p_test() {
 	}
 
 	while (1) {
+		expr_count++;
 		memset(test_res, '\0', sizeof(test_res));
 		memset(test_expr, '\0', sizeof(test_expr));
 
@@ -142,10 +144,11 @@ static int cmd_p_test() {
 		uint32_t test_res_t = atoi(test_res);
 		uint32_t expr_result = expr(test_expr, &expr_f);
 		if (test_res_t != expr_result) {
-			Log("ERROR. EXPR: %s, test result: %u, expr() result: %u \n", test_expr, test_res_t, expr_result);
-		}
+			Log("EXPR #%d is ERROR. EXPR: %s, test result: %u, expr() result: %u \n", expr_count, test_expr, test_res_t, expr_result);
+		} else Log("EXPR #%d passes the test\n", expr_count);
+
 	}
-	printf("p test:test finish.");
+	printf("p test:EXPR test completed\n");
 	return 0;
 }
 
