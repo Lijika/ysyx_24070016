@@ -120,6 +120,8 @@ static int cmd_x(char *args) {
 
 static int cmd_p_test() {
 	int expr_count = 0;
+	int error_count = 0;
+	int pass_count = 0;
 	bool expr_f = true;
 	char test_res[20];
 	char test_expr[65536];
@@ -144,11 +146,16 @@ static int cmd_p_test() {
 		uint32_t test_res_t = atoi(test_res);
 		uint32_t expr_result = expr(test_expr, &expr_f);
 		if (test_res_t != expr_result) {
+			error_count++;
 			Log("EXPR #%d is ERROR. EXPR: %s, test result: %u, expr() result: %u \n", expr_count, test_expr, test_res_t, expr_result);
-		} else Log("EXPR #%d passes the test\n", expr_count);
-
+		} else {
+			pass_count++;
+			Log("EXPR #%d passes the test\n", expr_count);
+		}
 	}
-	printf("p test:EXPR test completed\n");
+	printf("p test:EXPR test completed.\n");
+	printf("p test:ERROR(%d), PASS(%d).\n", error_count, pass_count);
+
 	return 0;
 }
 
