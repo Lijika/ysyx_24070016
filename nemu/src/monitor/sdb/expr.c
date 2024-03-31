@@ -23,7 +23,7 @@
 #include <stdbool.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_INT_NUM
+  TK_NOTYPE = 256, TK_EQ, TK_INT_NUM, TK_HEX_NUM, TK_NEQ
 
   /* TODO: Add more token types */
 
@@ -46,8 +46,12 @@ static struct rule {
   {"\\(", '('},
   {"\\)", ')'},
   {"[0-9]+", TK_INT_NUM},
+  {"0x[0-9a-z]+", TK_HEX_NUM},
 
   {"==", TK_EQ},        // equal
+  {"!=", TK_NEQ},
+  {""}
+
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -217,8 +221,8 @@ word_t eval(int p, int q) {
   }
   else {
     int op = search_main_token_position(p, q);
-    int val1 = eval(p, op - 1);
-    int val2 = eval(op + 1, q);
+    word_t val1 = eval(p, op - 1);
+    word_t val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
