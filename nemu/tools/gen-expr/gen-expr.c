@@ -38,8 +38,11 @@ uint32_t choose (uint32_t n) {
 int buf_pt;
 int has_divided;
 int max_gen_expr_depth;
+int buf_overflow;
 
 static void enbuf (char *s) {
+	if (buf_overflow == 1) return;
+
 	int gen_len;
 	gen_len = strlen(s);
 	int i;
@@ -48,6 +51,8 @@ static void enbuf (char *s) {
 		buf[buf_pt + i] = s[i];
 	}
 	buf_pt = buf_pt + gen_len;
+
+	if (buf_pt == 65536 - 1) buf_overflow = 1;
 }
 
 static void gen_num() {
@@ -88,6 +93,9 @@ static void gen_rand_expr() {
 	// 	return;
 	// }
 
+	//
+	if (buf_overflow == 1) return;
+
 	switch (choose(3)) {
 		case 0: gen_num(); break;
 		case 1: gen_tk('('); gen_rand_expr(); gen_tk(')'); break;
@@ -115,8 +123,12 @@ int main(int argc, char *argv[]) {
 	has_divided = 0;
 	buf_pt = 0;
 	// max_gen_expr_depth = 15;
-	memset(buf, '\0', sizeof(buf));
-    gen_rand_expr();
+	while (1) {
+		memset(buf, '\0', sizeof(buf));
+		buf_overflow = 0;
+		gen_rand_expr();
+		if (buf_overflow == 0) { break; }
+	}
 
     sprintf(code_buf, code_format, buf);
 
