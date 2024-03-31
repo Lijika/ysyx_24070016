@@ -156,6 +156,7 @@ static int cmd_p_test() {
 	printf("p test:EXPR test completed.\n");
 	printf("p test:ERROR(%d), PASS(%d).\n", error_count, pass_count);
 
+	fclose(fp);
 	return 0;
 }
 
