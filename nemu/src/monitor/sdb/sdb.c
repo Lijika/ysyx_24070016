@@ -121,7 +121,7 @@ static int cmd_x(char *args) {
 static int cmd_p(char *args) {
 	// word_t expr(char *e, bool *success);
 	bool f = true;
-	uint32_t p_EXPR_res;
+	__uint32_t p_EXPR_res;
 	p_EXPR_res = expr(args, &f);
 	if (f != true) {
 		Log("BAD EXPRESSION");
