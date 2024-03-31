@@ -41,50 +41,67 @@ int has_divided;
 int max_gen_expr_depth;
 
 static void enbuf (char *s) {
-	*(buf + buf_pt) = *s;
-	buf_pt++;
+	int gen_len;
+	gen_len = strlen(s);
+	int i;
+	for (i = 0; i < gen_len; i++) {
+		
+		buf[buf_pt + i] = s[i];
+	}
+	buf_pt = buf_pt + gen_len;
 }
 
-static void gen_tk(char s);
 static void gen_num() {
-	// int num_int = rand();
-	// char num_char[20];
+	int num_int = rand() % (2 ^ (sizeof(int) * 8 / 2));
+	char num_char[20];
 
-	// if (has_divided) num_int++;		//avoid generate zero
+	if (has_divided) num_int++;		//avoid generate zero
 
-	// sprintf(num_char, "%d", num_int);
-	gen_tk('rand()');
+	sprintf(num_char, "%d", num_int);
+	enbuf(num_char);
 }
 
-static void gen_tk(char s) {
-	char *tk = &s;
-	enbuf(tk);
+static void gen_tk(char tk) {
+	char tk_t[2];
+	tk_t[0] = tk;
+	tk_t[1] = '\0';
+	enbuf(tk_t);
 } 
 
 static void gen_rand_op() {
 	switch (choose(4)) {
-		case 0: gen_tk('+');
-		case 1: gen_tk('-');
-		case 2: gen_tk('*');
+		case 0: gen_tk('+'); break;
+		case 1: gen_tk('-'); break;
+		case 2: gen_tk('*'); break;
 		case 3: 
 			gen_tk('/'); 
 			has_divided = 1;
 			gen_num();
+			break;
 	}
 }
 
 static void gen_rand_expr() {
+	// max_gen_expr_depth--;
+	// if (max_gen_expr_depth == 0) {
+	// 	gen_num();
+	// 	max_gen_expr_depth++;
+	// 	return;
+	// }
+
 	switch (choose(3)) {
 		case 0: gen_num(); break;
 		case 1: gen_tk('('); gen_rand_expr(); gen_tk(')'); break;
-		default: gen_rand_expr(); gen_rand_op(); 
-			if (has_divided == 0) {
-			gen_rand_expr();
-			}
+		default: 
+			gen_rand_expr(); 
+			gen_rand_op(); 
+			if (has_divided == 0) { gen_rand_expr(); }
 			has_divided = 0;
 			break;
 	}
 	if (choose(3) == 0) gen_tk(' ');
+
+	// max_gen_expr_depth++;
 }
 
 int main(int argc, char *argv[]) {
@@ -98,6 +115,8 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < loop; i ++) {
 	has_divided = 0;
 	buf_pt = 0;
+	// max_gen_expr_depth = 15;
+	memset(buf, '\0', sizeof(buf));
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
