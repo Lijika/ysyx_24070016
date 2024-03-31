@@ -132,7 +132,7 @@ static bool make_token(char *e) {
   return true;
 }
 
-int eval(int p, int q);
+word_t eval(int p, int q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -196,7 +196,7 @@ int search_main_token_position (int p, int q) {
 
 #define BAD_EXPREESION -1
 
-int eval(int p, int q) {
+word_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
 	return BAD_EXPREESION;
