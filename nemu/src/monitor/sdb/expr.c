@@ -20,6 +20,7 @@
  */
 #include <regex.h>
 #include <string.h>
+#include <stdbool.h>
 
 enum {
   TK_NOTYPE = 256, TK_EQ, TK_INT_NUM

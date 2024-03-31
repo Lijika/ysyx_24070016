@@ -22,8 +22,8 @@
 
 // this should be enough
 int size = 65536;
-static char *buf = (char *)malloc(size * sizeof(char));
-static char *code_buf = (char *)malloc((size + 128) * sizeof(char)); // a little larger than `buf`
+static char buf[65536] = {};
+static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -37,32 +37,39 @@ uint32_t choose (uint32_t n) {
 }
 
 int buf_pt;
+int has_divided;
+int max_gen_expr_depth;
 
-static void enbuf (char s) {
-	if (buf_pt == size) {
-		buf = realloc(buf, size * 2);
-		code_buf = realloc(code_buf, size * 2 + 128);
-	}
-	buf[buf_pt] = s;
+static void enbuf (char *s) {
+	*(buf + buf_pt) = *s;
 	buf_pt++;
 }
 
+static void gen_tk(char s);
 static void gen_num() {
-	char num;
-	sprintf(&num, "%d", rand());
-	enbuf(num);
+	// int num_int = rand();
+	// char num_char[20];
+
+	// if (has_divided) num_int++;		//avoid generate zero
+
+	// sprintf(num_char, "%d", num_int);
+	gen_tk('rand()');
 }
 
 static void gen_tk(char s) {
-	enbuf(s);
+	char *tk = &s;
+	enbuf(tk);
 } 
 
 static void gen_rand_op() {
-	switch (choose(3)) {
+	switch (choose(4)) {
 		case 0: gen_tk('+');
 		case 1: gen_tk('-');
 		case 2: gen_tk('*');
-		case 3: gen_tk('/');
+		case 3: 
+			gen_tk('/'); 
+			has_divided = 1;
+			gen_num();
 	}
 }
 
@@ -70,9 +77,14 @@ static void gen_rand_expr() {
 	switch (choose(3)) {
 		case 0: gen_num(); break;
 		case 1: gen_tk('('); gen_rand_expr(); gen_tk(')'); break;
-		case 2: gen_tk(' ');
-		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+		default: gen_rand_expr(); gen_rand_op(); 
+			if (has_divided == 0) {
+			gen_rand_expr();
+			}
+			has_divided = 0;
+			break;
 	}
+	if (choose(3) == 0) gen_tk(' ');
 }
 
 int main(int argc, char *argv[]) {
@@ -84,6 +96,7 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+	has_divided = 0;
 	buf_pt = 0;
     gen_rand_expr();
 
