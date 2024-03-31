@@ -118,12 +118,44 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_p_test() {
+	bool expr_f = true;
+	char test_res[20];
+	char test_expr[65536];
+
+	FILE *fp = fopen("/home/lhjysyx/ysyx-workbench/nemu/tools/gen-expr/input1", "r");
+	if (fp == NULL) { 
+		Log("Failure to open file.\n");
+		return 0;
+	}
+
+	while (1) {
+		memset(test_res, '\0', sizeof(test_res));
+		memset(test_expr, '\0', sizeof(test_expr));
+
+		if (fscanf(fp, "%s", test_res) == EOF) break;
+		if (fgets(test_expr, 65536, fp) == NULL) break;
+
+		uint32_t test_res_t = atoi(test_res);
+		uint32_t expr_result = expr(test_expr, &expr_f);
+		if (test_res_t != expr_result) {
+			Log("ERROR. EXPR: %s, test result: %u, expr() result: %u \n", test_expr, test_res_t, expr_result);
+		}
+	}
+	return 0;
+}
+
 static int cmd_p(char *args) {
 	// word_t expr(char *e, bool *success);
-	bool f = true;
+	char p_args_test [] = { "test" };
+	if (strcmp(args, p_args_test) == 0) {
+		cmd_p_test();
+		return 0;
+	}
+	bool expr_f = true;
 	word_t p_EXPR_res;
-	p_EXPR_res = expr(args, &f);
-	if (f != true) {
+	p_EXPR_res = expr(args, &expr_f);
+	if (expr_f != true) {
 		Log("BAD EXPRESSION");
 	} else {
 		printf("EXPR result = %u \n", p_EXPR_res);
