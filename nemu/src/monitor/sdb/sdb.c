@@ -135,6 +135,9 @@ static int cmd_p_test() {
 
 		if (fscanf(fp, "%s", test_res) == EOF) break;
 		if (fgets(test_expr, 65536, fp) == NULL) break;
+		//delete '\n'
+		int len_expr = strlen(test_expr);
+		test_expr[len_expr - 1] = '\0'; 	
 
 		uint32_t test_res_t = atoi(test_res);
 		uint32_t expr_result = expr(test_expr, &expr_f);
