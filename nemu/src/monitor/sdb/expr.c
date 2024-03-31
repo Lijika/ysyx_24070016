@@ -215,9 +215,9 @@ word_t eval(int p, int q) {
     return eval(p + 1, q - 1);
   }
   else {
-    uint32_t op = search_main_token_position(p, q);
-    uint32_t val1 = eval(p, op - 1);
-    uint32_t val2 = eval(op + 1, q);
+    int op = search_main_token_position(p, q);
+    unsigned int val1 = eval(p, op - 1);
+    unsigned int val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
