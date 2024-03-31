@@ -169,7 +169,7 @@ int check_parentheses(int p, int q) {
 }
 
 int search_main_token_position (int p, int q) {
-	int position_t = 0;
+	int position_mulordiv = 0;
 	while (q >= p){
 		if (tokens[q].type == ')') {
 			int right = q;
@@ -184,14 +184,15 @@ int search_main_token_position (int p, int q) {
 			continue; 
 		}
 		
+		//Priority return to the rightmost plus and minus positions
 		if ((tokens[q].type == '+') || (tokens[q].type == '-')) {
 			return q;
 		} else {
-			position_t = q;
+			if ( position_mulordiv == 0) position_mulordiv = q;
 			q--;
 		}
 	}
-	return position_t;
+	return position_mulordiv;
 }
 
 #define BAD_EXPREESION -1
