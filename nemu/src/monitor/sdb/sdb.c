@@ -173,7 +173,7 @@ static int cmd_p(char *args) {
 	if (expr_f != true) {
 		Log("BAD EXPRESSION");
 	} else {
-		printf("EXPR result = %u \n", p_EXPR_res);
+		printf("EXPR result = %u , %#x\n", p_EXPR_res, p_EXPR_res);
 	} 	
 	return 0;
 }
