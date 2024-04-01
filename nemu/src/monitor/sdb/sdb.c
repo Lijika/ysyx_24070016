@@ -178,6 +178,16 @@ static int cmd_p(char *args) {
 	return 0;
 }
 
+static int cmd_w (char *args) {
+	
+	return 0;
+}
+
+static int cmd_d (char *args) {
+	
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -192,6 +202,8 @@ static struct {
   { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
   { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
   { "p", "Find the value of the expression EXPR", cmd_p},
+  { "w", "Suspends program execution when the value of expression EXPR changes.", cmd_w},
+  { "d", "Delete the monitoring point with serial number N", cmd_d}
 
   /* TODO: Add more commands */
 
