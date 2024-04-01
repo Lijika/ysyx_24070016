@@ -23,7 +23,7 @@
 #include <stdbool.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_INT_NUM, TK_HEX_NUM, TK_NEQ
+  TK_NOTYPE = 256, TK_EQ, TK_INT_NUM, TK_HEX_NUM, TK_NEQ, TK_AND, TK_DEREF, TK_REG
 
   /* TODO: Add more token types */
 
@@ -50,7 +50,9 @@ static struct rule {
 
   {"==", TK_EQ},        // equal
   {"!=", TK_NEQ},
-  {""}
+  {"&&", TK_AND},
+  {"\\*", TK_DEREF},		//The make_token() function will not match this character 
+  {"\\$(\\$0|([0-9a-z]+))", TK_REG},
 
 };
 
@@ -139,17 +141,29 @@ static bool make_token(char *e) {
 word_t eval(int p, int q);
 
 word_t expr(char *e, bool *success) {
-  if (!make_token(e)) {
-    *success = false;
-    return 0;
-  }
+	if (!make_token(e)) {
+		*success = false;
+		return 0;
+	}
 
 //   assert(0);
   /* TODO: Insert codes to evaluate the expression. */
-  word_t expr_res;
-  expr_res = eval(0, nr_token - 1);
+	int i;
+	for (i = 0; i < nr_token; i ++) {
+		if (tokens[i].type == '*' && 
+			(i == 0 || tokens[i - 1].type == '+'
+					|| tokens[i - 1].type == '-'
+					|| tokens[i - 1].type == '*'
+					|| tokens[i - 1].type == '/'
+					|| tokens[i - 1].type == '('
+					|| tokens[i - 1].type == TK_EQ
+					|| tokens[i - 1].type == TK_NEQ
+					|| tokens[i - 1].type == TK_AND) ) {
+			tokens[i].type = TK_DEREF;
+		}
+	}
 
-  return expr_res;
+	return eval(0, nr_token - 1);
 }
 
 int check_parentheses(int p, int q) {
@@ -173,7 +187,10 @@ int check_parentheses(int p, int q) {
 }
 
 int search_main_token_position (int p, int q) {
-	int position_mulordiv = 0;
+	int main_token_position = 0;
+	int priority = 0;
+	// if (tokens[p].type == TK_DEREF) return p;
+
 	while (q >= p){
 		if (tokens[q].type == ')') {
 			int right = q;
@@ -183,23 +200,49 @@ int search_main_token_position (int p, int q) {
 		} else if ((tokens[q].type != '+') 
 			&& (tokens[q].type != '-')
 			&& (tokens[q].type != '*')
-			&& (tokens[q].type != '/')) { 
+			&& (tokens[q].type != '/')
+			&& (tokens[q].type != TK_EQ)
+			&& (tokens[q].type != TK_NEQ)
+			&& (tokens[q].type != TK_AND)) { 
 			q--;
 			continue; 
 		}
 		
 		//Priority return to the rightmost plus and minus positions
-		if ((tokens[q].type == '+') || (tokens[q].type == '-')) {
-			return q;
-		} else {
-			if ( position_mulordiv == 0) position_mulordiv = q;
+		if (tokens[q].type == TK_AND) {
+			main_token_position = q;
+			priority = 0;
+			q--;
+		}
+		else if ((tokens[q].type == TK_EQ) || (tokens[q].type == TK_NEQ)) {
+			if ((main_token_position == 0) || (priority > 1)) {
+				main_token_position = q;
+				priority = 1;
+			}
+			q--;
+		}
+		else if ((tokens[q].type == '+') || (tokens[q].type == '-')) {
+			if ((main_token_position == 0) || (priority > 2)) {
+				main_token_position = q;
+				priority = 2;
+			}
+			q--;
+		} 
+		else if ((tokens[q].type == '*') || (tokens[q].type == '/')) {
+			if ((main_token_position == 0) || (priority > 3)) {
+				main_token_position = q;
+				priority = 3;
+			}
 			q--;
 		}
 	}
-	return position_mulordiv;
+	return main_token_position;
 }
 
 #define BAD_EXPREESION -1
+word_t isa_reg_str2val(const char *s, bool *success);
+word_t paddr_read(paddr_t addr, int len);
+
 
 word_t eval(int p, int q) {
   if (p > q) {
@@ -211,7 +254,16 @@ word_t eval(int p, int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-	return atoi(tokens[p].str);
+	if (tokens[p].type == TK_REG) {
+		//word_t isa_reg_str2val(const char *s, bool *success)
+		char *reg_name = tokens[p].str + 1; 
+		bool reg_f = true;
+		word_t reg_val = isa_reg_str2val(reg_name, &reg_f);
+		Assert(reg_f, "Register name '%s' is not available.", reg_name);
+		return reg_val;
+	}
+
+	return strtol(tokens[p].str, NULL, 0);
   }
   else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
@@ -219,16 +271,23 @@ word_t eval(int p, int q) {
      */
     return eval(p + 1, q - 1);
   }
+  else if ((p == q - 1) && (tokens[p].type == TK_DEREF)) {
+	paddr_t addr = strtol(tokens[q].str, NULL, 0);
+	return paddr_read(addr, 1);
+  }
   else {
     int op = search_main_token_position(p, q);
-    word_t val1 = eval(p, op - 1);
-    word_t val2 = eval(op + 1, q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
+	  case TK_EQ: return val1 == val2;
+	  case TK_NEQ: return val1 != val2;
+	  case TK_AND: return val1 && val2;
       default: assert(0);
     }
   }
