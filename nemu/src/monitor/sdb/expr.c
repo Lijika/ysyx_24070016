@@ -273,7 +273,7 @@ word_t eval(int p, int q) {
     return eval(p + 1, q - 1);
   }
   else if ((p == q - 1) && (tokens[p].type == TK_DEREF)) {
-	word_t addr = strtol(tokens[q].str, NULL, 16);
+	paddr_t addr = strtol(tokens[q].str, NULL, 16);
 	return paddr_read(addr, 1);
   }
   else {
