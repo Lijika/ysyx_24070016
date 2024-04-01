@@ -45,8 +45,9 @@ static struct rule {
   {"\\/", '/'},			//divided
   {"\\(", '('},
   {"\\)", ')'},
-  {"[0-9]+", TK_INT_NUM},
   {"0x[0-9a-z]+", TK_HEX_NUM},
+  {"[0-9]+", TK_INT_NUM},
+
 
   {"==", TK_EQ},        // equal
   {"!=", TK_NEQ},
