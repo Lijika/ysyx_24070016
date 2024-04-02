@@ -83,7 +83,6 @@ WP* find_wp (int wp_no, bool *success) {
 		return NULL;
 	}
 	else {
-		assert(0);
 		while (wp_no != find->NO) find = find->next;
 	}
 
