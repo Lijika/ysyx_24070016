@@ -95,7 +95,7 @@ WP* find_wp (int wp_no, bool *success) {
 
 void scanf_wp_head (bool *hit) {
 	WP *scanf_wp = head;
-	bool success;
+	bool success = true;
 	while (scanf_wp != NULL) {
 		word_t cur_expr_res = expr(scanf_wp->EXPR, &success);
 		assert(success);
