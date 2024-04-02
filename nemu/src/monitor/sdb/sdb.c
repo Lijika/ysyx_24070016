@@ -191,8 +191,12 @@ static int cmd_w (char *args) {
 
 static int cmd_d (char *args) {
 	int wp_no = atoi(args);
-	bool find_f;
+	bool find_f = true;
 	WP *delete_wp = find_wp(wp_no, &find_f);
+	if (find_f == false) {
+		Log("d:no.%d watchpoint does not exist.", wp_no);
+		return 0;
+	}
 	free_wp(delete_wp);
 	
 	return 0;

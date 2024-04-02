@@ -70,14 +70,14 @@ void free_wp(WP *wp) {
 
 	if (wp_front == NULL) assert(0);
 	wp_front->next = wp->next;
-	
+
 	free(wp);
 	printf("free success\n");
 };
 
 WP* find_wp (int wp_no, bool *success) {
 	WP *find = head;
-	while (wp_no != find->val && find != NULL) {
+	while (wp_no != find->NO && find != NULL) {
 		find = find->next;
 	}
 	if (find == NULL) success = false;
