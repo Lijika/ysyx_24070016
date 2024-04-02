@@ -62,8 +62,10 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args) {
 	char info_args [] = {
-		"r"		//info r
-
+		//info reg
+		'r',
+		//info watchpoint
+		'w'
 	};
 
 	int num_info_args = strlen(info_args);
@@ -74,6 +76,7 @@ static int cmd_info(char *args) {
 		} else if (strcmp(args, &info_args[i]) == 0) {
 			switch (i) {
 			case 0: isa_reg_display();	//info r
+			case 1: wp_display();
 
 			}
 		} else {
@@ -194,10 +197,9 @@ static int cmd_d (char *args) {
 	bool find_f = true;
 	WP *delete_wp = find_wp(wp_no, &find_f);
 	if (find_f == false) {
-		Log("d:no.%d watchpoint does not exist.", wp_no);
+		printf("d:no.%d watchpoint does not exist.\n", wp_no);
 		return 0;
 	}
-	// printf("q\n\n\n");
 	// assert(0);
 	free_wp(delete_wp);
 	

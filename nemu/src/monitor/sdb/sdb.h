@@ -36,5 +36,6 @@ WP* new_wp();
 WP* find_wp (int wp_no, bool *success);
 void free_wp(WP *wp);
 void scanf_wp_head (bool *hit);
+void wp_display ();
 
 #endif

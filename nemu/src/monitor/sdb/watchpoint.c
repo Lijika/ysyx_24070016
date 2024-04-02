@@ -23,7 +23,6 @@
 
 //   /* TODO: Add more members if necessary */
 //   bool en;
-// //   int addr;
 //   word_t val;
 //   int hit_count;
 //   char *EXPR;
@@ -111,3 +110,17 @@ void scanf_wp_head (bool *hit) {
 	}
 }
 
+void wp_display () {
+	printf("NO \ten \tval \thit count \tEXPR\n");
+	WP *p = head;
+	if (p == NULL) {
+		printf("There are no watchpoint in place.\n");
+		return;
+	}
+	else {
+		while (p != NULL) {
+			printf("%d \t%d \t%d \t%d \t%s\n", p->NO, p->en, p->val, p->hit_count, p->EXPR);
+			p = p->next;
+		}
+	}
+}
