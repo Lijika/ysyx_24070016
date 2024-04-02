@@ -179,11 +179,21 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_w (char *args) {
-	
+	WP *w_new_wp;
+	w_new_wp = new_wp();
+	w_new_wp->EXPR = args; 
+	bool expr_f = true;
+	w_new_wp->val = expr(args, &expr_f);
+	assert(expr_f);
+
 	return 0;
 }
 
 static int cmd_d (char *args) {
+	int wp_no = atoi(args);
+	bool find_f;
+	WP *delete_wp = find_wp(wp_no, &find_f);
+	free_wp(delete_wp);
 	
 	return 0;
 }
