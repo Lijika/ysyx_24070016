@@ -25,7 +25,7 @@
 //   bool en;
 //   word_t val;
 //   int hit_count;
-//   char *EXPR;
+//   char EXPR[32*32];
 // } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -40,7 +40,7 @@ void init_wp_pool() {
 	// wp_pool[i].addr = 0;
 	wp_pool[i].val = 0;
 	wp_pool[i].hit_count = 0;
-	wp_pool[i].EXPR = NULL;
+	memset(wp_pool[i].EXPR, '\0', sizeof(wp_pool[i].EXPR));
   }
 
   head = NULL;

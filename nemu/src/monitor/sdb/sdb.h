@@ -29,7 +29,7 @@ typedef struct watchpoint {
 //   int addr;
   word_t val;
   int hit_count;
-  char *EXPR;
+  char EXPR[32*32];
 } WP;
 
 WP* new_wp();

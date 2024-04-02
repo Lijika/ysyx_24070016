@@ -187,10 +187,9 @@ static int cmd_p(char *args) {
 static int cmd_w (char *args) {
 	WP *w_new_wp;
 	w_new_wp = new_wp();
-	char w_expr = *args;
-	w_new_wp->EXPR = &w_expr; 
+	strcpy(w_new_wp->EXPR, args);
 	bool expr_f = true;
-	w_new_wp->val = expr(&w_expr, &expr_f);
+	w_new_wp->val = expr(w_new_wp->EXPR, &expr_f);
 	assert(expr_f);
 
 	return 0;
