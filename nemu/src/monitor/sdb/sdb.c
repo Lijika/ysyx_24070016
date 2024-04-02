@@ -197,6 +197,7 @@ static int cmd_d (char *args) {
 		Log("d:no.%d watchpoint does not exist.", wp_no);
 		return 0;
 	}
+	printf("q");
 	assert(0);
 	free_wp(delete_wp);
 	
