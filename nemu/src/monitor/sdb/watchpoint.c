@@ -68,9 +68,15 @@ void free_wp(WP *wp) {
 	}
 
 	if (wp_front == NULL) assert(0);
-	wp_front->next = wp->next;
 
-	free(wp);
+	if (wp_front == wp) {
+		head = NULL;
+	}
+	else{
+		wp_front->next = wp->next;
+		wp->next = NULL;
+	}
+
 	printf("free success\n");
 };
 
