@@ -62,6 +62,7 @@ WP* new_wp(){
 };
 
 void free_wp(WP *wp) {
+	assert(0);
 	WP *wp_front = head;
 	while (wp_front->next != wp && wp_front != NULL) {
 		wp_front = wp_front->next;
