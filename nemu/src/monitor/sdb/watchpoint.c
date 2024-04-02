@@ -107,6 +107,7 @@ void scanf_wp_head (bool *hit) {
 			scanf_wp->val = cur_expr_res;
 			scanf_wp->hit_count++;
 		}
+		scanf_wp = scanf_wp->next;
 	}
 }
 
