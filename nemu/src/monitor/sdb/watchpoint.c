@@ -77,6 +77,7 @@ void free_wp(WP *wp) {
 
 WP* find_wp (int wp_no, bool *success) {
 	WP *find = head;
+	assert(0);
 	while (wp_no != find->NO && find != NULL) {
 		find = find->next;
 	}
