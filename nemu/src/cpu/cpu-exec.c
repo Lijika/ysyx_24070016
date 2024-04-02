@@ -40,12 +40,15 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   
+#ifdef CONFIG_WATCHPOINT
+  assert(0);
   bool hit = false;
   scanf_wp_head (&hit);
   if (hit) {
 	nemu_state.state = NEMU_STOP;
 	Log("Watchpoint triggered.\n");
   }
+#endif
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {

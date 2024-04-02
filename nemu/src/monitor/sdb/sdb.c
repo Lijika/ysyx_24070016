@@ -73,6 +73,7 @@ static int cmd_info(char *args) {
 	for ( i = 0; i < num_info_args; i++) {
 		if (args == NULL) { 
 			printf("info:Missing args. \n'info r'--prints register status. \n'info w'--prints watchpoint information. \n");
+			return 0;
 		} 
 		else if (strcmp(args, &info_args[i]) == 0) {
 			switch (i) {
