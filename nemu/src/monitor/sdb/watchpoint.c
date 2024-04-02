@@ -77,10 +77,16 @@ void free_wp(WP *wp) {
 
 WP* find_wp (int wp_no, bool *success) {
 	WP *find = head;
-	assert(0);
-	while (wp_no != find->NO && find != NULL) {
+	if (find == NULL) {
+		printf("There are no watchpoint in place.\n");
+		success = false;
+		return 0;
+	}
+
+	while (find != NULL && wp_no != find->NO) {
 		find = find->next;
 	}
+
 	if (find == NULL) {
 		success = false;
 		return 0;
