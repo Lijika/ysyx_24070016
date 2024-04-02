@@ -80,8 +80,7 @@ WP* find_wp (int wp_no, bool *success) {
 	if (find == NULL) {
 		printf("There are no watchpoint in place.\n");
 		success = false;
-		assert(0);
-		return 0;
+		return NULL;
 	}
 	else {
 		assert(0);
@@ -90,7 +89,7 @@ WP* find_wp (int wp_no, bool *success) {
 
 	if (find == NULL) {
 		success = false;
-		return 0;
+		return NULL;
 	}
 
 	return find;
