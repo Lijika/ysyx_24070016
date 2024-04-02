@@ -119,7 +119,7 @@ void wp_display () {
 	}
 	else {
 		while (p != NULL) {
-			printf("%d \t%d \t%d \t%d \t%s\n", p->NO, p->en, p->val, p->hit_count, p->EXPR);
+			printf("%d \t%d \t%d \t%d \t\t%s\n", p->NO, p->en, p->val, p->hit_count, p->EXPR);
 			p = p->next;
 		}
 	}
