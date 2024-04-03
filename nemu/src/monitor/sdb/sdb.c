@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <stdbool.h>
 
 static int is_batch_mode = false;
 
@@ -49,7 +50,161 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+	if (nemu_state.state != NEMU_END) {nemu_state.state = NEMU_QUIT;}
   return -1;
+}
+
+static int cmd_si(char *args) {
+	int args_num = atoi(args);
+	cpu_exec(args_num);
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	// char info_args [] = {
+	// 	//info reg
+	// 	'r',
+	// 	//info watchpoint
+	// 	'w'
+	// };
+	if (args == NULL) { 
+		printf("info:Missing args. \n'info r'--prints register status. \n'info w'--prints watchpoint information. \n");
+		return 0;
+	} 
+
+	switch (*args) {
+		case 'r': isa_reg_display(); break;
+		case 'w': wp_display(); break;
+		default: printf("Unknown command 'info %s'\n", args); break;
+	}
+	return 0;
+}
+
+static int cmd_x(char *args) {
+	if (args == NULL) {
+		printf("x:Missing args N. \n");
+		printf("'x N EXPR'--Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.\n");
+		return 0;
+	}
+
+	char *x_args_str_end = args + strlen(args);
+	char *x_args_Num = strtok(args, " ");
+
+	char *x_args_EXPR = x_args_Num + strlen(x_args_Num) + 1;
+	if (x_args_EXPR >= x_args_str_end) {
+		printf("x:Missing args EXPR. \n");
+		printf("'x N EXPR'--Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.\n");
+		return 0;
+	}
+
+	// cmd_table[6].handler(x_args_EXPR);
+
+	word_t paddr_read(paddr_t addr, int len);
+	bool expr_f = true;
+	word_t mem_val;
+	paddr_t args_addr = expr(x_args_EXPR, &expr_f); //temp
+
+	if(expr_f == false) {
+		Log("BAD EXPRESSION");
+		return 0;
+	}
+
+	int N = atoi(x_args_Num);
+	for(; N >= 1; N--){
+		printf("%#x:", args_addr);
+		for(int i = 3; i >= 0; i --) {
+			mem_val = paddr_read(args_addr + i, 1);
+			printf(" \t%#x", mem_val);
+		}
+		printf("\n");
+		args_addr = args_addr + 4;
+	}
+	return 0;
+}
+
+static int cmd_p_test() {
+	int expr_count = 0;
+	int error_count = 0;
+	int pass_count = 0;
+	bool expr_f = true;
+	char test_res[20];
+	char test_expr[65536];
+
+	FILE *fp = fopen("/home/lhjysyx/ysyx-workbench/nemu/tools/gen-expr/input", "r");
+	if (fp == NULL) { 
+		Log("Failure to open file.\n");
+		return 0;
+	}
+
+	while (1) {
+		expr_count++;
+		memset(test_res, '\0', sizeof(test_res));
+		memset(test_expr, '\0', sizeof(test_expr));
+
+		if (fscanf(fp, "%s", test_res) == EOF) break;
+		if (fgets(test_expr, 65536, fp) == NULL) break;
+		//delete '\n'
+		int len_expr = strlen(test_expr);
+		test_expr[len_expr - 1] = '\0'; 	
+
+		uint32_t test_res_t = atoi(test_res);
+		uint32_t expr_result = expr(test_expr, &expr_f);
+		if (test_res_t != expr_result) {
+			error_count++;
+			Log("EXPR #%d is ERROR. EXPR: %s, test result: %u, expr() result: %u \n", expr_count, test_expr, test_res_t, expr_result);
+		} else {
+			pass_count++;
+			Log("EXPR #%d passes the test\n", expr_count);
+		}
+	}
+	printf("p test:EXPR test completed.\n");
+	printf("p test:ERROR(%d), PASS(%d).\n", error_count, pass_count);
+
+	fclose(fp);
+	return 0;
+}
+
+static int cmd_p(char *args) {
+	// word_t expr(char *e, bool *success);
+	char p_args_test [] = { "test" };
+	if (strcmp(args, p_args_test) == 0) {
+		cmd_p_test();
+		return 0;
+	}
+	bool expr_f = true;
+	word_t p_EXPR_res;
+	p_EXPR_res = expr(args, &expr_f);
+	if (expr_f != true) {
+		Log("BAD EXPRESSION");
+	} else {
+		printf("EXPR result = %u \t %#x\n", p_EXPR_res, p_EXPR_res);
+	} 	
+	return 0;
+}
+
+static int cmd_w (char *args) {
+	WP *w_new_wp;
+	w_new_wp = new_wp();
+	strcpy(w_new_wp->EXPR, args);
+	bool expr_f = true;
+	w_new_wp->val = expr(w_new_wp->EXPR, &expr_f);
+	assert(expr_f);
+
+	return 0;
+}
+
+static int cmd_d (char *args) {
+	int wp_no = atoi(args);
+	bool find_f = true;
+	WP *delete_wp = find_wp(wp_no, &find_f);
+	if (find_f == false) {
+		printf("d:no.%d watchpoint does not exist.\n", wp_no);
+		return 0;
+	}
+	// assert(0);
+	free_wp(delete_wp);
+	
+	return 0;
 }
 
 static int cmd_help(char *args);
@@ -62,6 +217,12 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Lets the program pause after executing N instructions in a single step, when N is not given, the default is 1.", cmd_si },
+  { "info", "info r prints register status, info w prints watchpoint information. ", cmd_info },
+  { "x", "Find the value of the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal.", cmd_x },
+  { "p", "Find the value of the expression EXPR", cmd_p},
+  { "w", "Suspends program execution when the value of expression EXPR changes.", cmd_w},
+  { "d", "Delete the monitoring point with serial number N", cmd_d}
 
   /* TODO: Add more commands */
 

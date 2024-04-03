@@ -19,5 +19,23 @@
 #include <common.h>
 
 word_t expr(char *e, bool *success);
+// typedef struct watchpoint WP;
+typedef struct watchpoint {
+  int NO;
+  struct watchpoint *next;
+
+  /* TODO: Add more members if necessary */
+  bool en;
+//   int addr;
+  word_t val;
+  int hit_count;
+  char EXPR[32*32];
+} WP;
+
+WP* new_wp();
+WP* find_wp (int wp_no, bool *success);
+void free_wp(WP *wp);
+void scanf_wp_head (bool *hit);
+void wp_display ();
 
 #endif
