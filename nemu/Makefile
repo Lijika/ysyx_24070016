@@ -59,3 +59,11 @@ else
 # Include rules to build NEMU
 include $(NEMU_HOME)/scripts/native.mk
 endif
+
+CUR_CODE_LINE := $(shell find ./ -type f -name "*.c" -o -name "*.h" | xargs cat |grep -v ^$$| wc -l)
+PA0_CODE_LINE := 20630
+
+count:
+	@expr $(CUR_CODE_LINE) - $(PA0_CODE_LINE)
+
+.PHONY: count
