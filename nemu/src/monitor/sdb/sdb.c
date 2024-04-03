@@ -61,31 +61,21 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
-	char info_args [] = {
-		//info reg
-		'r',
-		//info watchpoint
-		'w'
-	};
+	// char info_args [] = {
+	// 	//info reg
+	// 	'r',
+	// 	//info watchpoint
+	// 	'w'
+	// };
+	if (args == NULL) { 
+		printf("info:Missing args. \n'info r'--prints register status. \n'info w'--prints watchpoint information. \n");
+		return 0;
+	} 
 
-	int num_info_args = strlen(info_args);
-	int i;
-	for ( i = 0; i < num_info_args; i++) {
-		if (args == NULL) { 
-			printf("info:Missing args. \n'info r'--prints register status. \n'info w'--prints watchpoint information. \n");
-			return 0;
-		} 
-		else if (strcmp(args, &info_args[i]) == 0) {
-			switch (i) {
-			case 0: isa_reg_display();	//info r
-			case 1: wp_display();
-
-			}
-			break;
-		} 
-		else if (i == num_info_args - 1) {
-			printf("Unknown command 'info %s'\n", args);
-		}
+	switch (*args) {
+		case 'r': isa_reg_display(); break;
+		case 'w': wp_display(); break;
+		default: printf("Unknown command 'info %s'\n", args); break;
 	}
 	return 0;
 }
