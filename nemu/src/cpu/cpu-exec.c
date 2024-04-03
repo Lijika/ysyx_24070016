@@ -41,7 +41,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   
 #ifdef CONFIG_WATCHPOINT
-  assert(0);
   bool hit = false;
   scanf_wp_head (&hit);
   if (hit) {

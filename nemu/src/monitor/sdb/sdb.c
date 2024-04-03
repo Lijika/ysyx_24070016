@@ -110,8 +110,15 @@ static int cmd_x(char *args) {
 	// cmd_table[6].handler(x_args_EXPR);
 
 	word_t paddr_read(paddr_t addr, int len);
+	bool expr_f = true;
 	word_t mem_val;
-	paddr_t args_addr = 0x80000000; //temp
+	paddr_t args_addr = expr(x_args_EXPR, &expr_f); //temp
+
+	if(expr_f == false) {
+		Log("BAD EXPRESSION");
+		return 0;
+	}
+
 	int N = atoi(x_args_Num);
 	for(; N >= 1; N--){
 		printf("%#x:", args_addr);
