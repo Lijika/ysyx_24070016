@@ -130,7 +130,7 @@ static int cmd_p_test() {
 	char test_res[20];
 	char test_expr[65536];
 
-	FILE *fp = fopen("/home/lhjysyx/ysyx-workbench/nemu/tools/gen-expr/input", "r");
+	FILE *fp = fopen("/home/lhjysyx/ysyx-workbench/nemu/tools/gen-expr/input10", "r");
 	if (fp == NULL) { 
 		Log("Failure to open file.\n");
 		return 0;
