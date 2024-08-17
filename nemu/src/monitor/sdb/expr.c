@@ -190,7 +190,7 @@ int check_parentheses(int p, int q) {
 int search_main_token_position (int p, int q) {
 	int main_token_position = 0;
 	int priority = 0;
-	// if (tokens[p].type == TK_DEREF) return p;
+	if (tokens[p].type == TK_DEREF) return p;
 
 	while (q >= p){
 		if (tokens[q].type == ')') {
