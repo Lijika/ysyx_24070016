@@ -37,7 +37,7 @@ enum {
 						   (BITS(i, 20, 20) << 11) | \
 						   (BITS(i, 30, 21) << 1); } while(0)
 #define immB() do { *imm = (SEXT(BITS(i, 31, 31), 1)) << 12 | \
-						   BITS(i, 7, 7) << 10 | \
+						   BITS(i, 7, 7) << 11 | \
 						   BITS(i, 30, 25) << 5 | \
 						   BITS(i, 11, 8) << 1;} while(0)
 
