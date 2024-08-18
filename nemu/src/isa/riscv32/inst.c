@@ -21,7 +21,8 @@
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
-#define CMPs(a, b) (BITS(a, 31, 31) > BITS(b, 31, 31)) || (BITS(a, 30, 0) < BITS(b, 30, 0))
+#define CMPs(a, b) (BITS(a, 31, 31) > BITS(b, 31, 31)) || \
+				   ((BITS(a, 31, 31) == BITS(b, 31, 31)) && (BITS(a, 30, 0) < BITS(b, 30, 0)))
 
 enum {
   TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_B, TYPE_R, 
