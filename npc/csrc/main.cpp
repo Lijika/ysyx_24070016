@@ -4,7 +4,7 @@
 #include <verilated.h>
 #include "Vysyx_24070016_top.h"
 #include "verilated_vcd_c.h"
-#include "./vltstd/svdpi.h"
+#include "svdpi.h"
 #include "Vysyx_24070016_top__Dpi.h"
 // #include <nvboard.h>
 
