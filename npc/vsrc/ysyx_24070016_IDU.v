@@ -9,7 +9,7 @@ module ysyx_24070016_IDU (
 	output rf_wen,
 	output sel_rs2Isimm
 );
-
+/* verilator lint_off UNUSEDSIGNAL */
 assign dec_rs1 = inst[19:15];
 assign dec_rs2 = inst[24:20];
 assign dec_rd = inst[11:7];
@@ -72,5 +72,5 @@ assign dec_imm = imm;
 //control sig
 assign rf_wen = inst_addi;
 assign sel_rs2Isimm = inst_addi;
-
+/* verilator lint_off UNUSEDSIGNAL */
 endmodule
