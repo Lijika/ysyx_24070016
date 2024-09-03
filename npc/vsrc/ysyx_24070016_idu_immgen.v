@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSEDSIGNAL */
 module ysyx_24070016_idu_immgen (
 	input [4:0] num_type,
 	input [31:0] inst,
@@ -17,3 +18,4 @@ assign imm = ({32{num_type[4]}} & imm_I)
 			| ({32{num_type[0]}} & imm_J);
 
 endmodule
+/* verilator lint_off UNUSEDSIGNAL */
