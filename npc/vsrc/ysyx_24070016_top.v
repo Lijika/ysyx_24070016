@@ -15,7 +15,7 @@ module ysyx_24070016_top(
 
 wire [31:0] pc;
 wire [31:0] nextpc;
-assign nextpc = pc + 32'b4;
+assign nextpc = pc + 32'h00000004;
 ysyx_24070016_Reg #(
 	.WIDTH		(32            ),
 	.RESET_VAL	(32'h80000000  )
