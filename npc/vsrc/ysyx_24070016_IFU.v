@@ -1,15 +1,10 @@
-module ysyx_24070016_IFU(
+module ysyx_24070016_IFU (
 	input [31:0] pc,
-	input [31:0] inst_mem_rdata,
-	output [31:0] inst,
-	output [31:0] inst_mem_addr,
-	output [31:0] inst_mem_wdata,
-	output inst_mem_wen
+	output [31:0] inst
 );
 
-assign inst = inst_mem_rdata;
-assign inst_mem_addr = pc;
-assign inst_mem_wdata = 32'h0;
-assign inst_mem_wen = 1'b0;
+import "DPI-C" function uint32_t pmem_read_if(input uint32_t pc);
 
-endmodule 
+assign inst = pmem_read_if(pc);
+
+endmodule

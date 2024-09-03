@@ -15,7 +15,7 @@ always @(posedge clk) begin
 	if (wen) rf[waddr] <= wdata;
 end
 
-assign rdata1 = (raddr1 == 5'b0) ? 32'b0 : rf[raddr1];
-assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : rf[raddr2];
+assign rdata1 = (raddr1 == ADDR_WIDTH'b0) ? DATA_WIDTH'b0 : rf[raddr1];
+assign rdata2 = (raddr2 == ADDR_WIDTH'b0) ? DATA_WIDTH'b0 : rf[raddr2];
 
 endmodule

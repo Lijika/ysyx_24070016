@@ -1,20 +1,21 @@
 module ysyx_24070016_top(
 	input clk,
-	input rst,
+	input rst
 	//Mem port
-	output [31:0] inst_mem_addr,
-	output inst_mem_wen,
-	output [31:0] inst_mem_wdata,
-	input [31:0] inst_mem_rdata,
+	// output [31:0] inst_mem_addr,
+	// output inst_mem_wen,
+	// output [31:0] inst_mem_wdata,
+	// input [31:0] inst_mem_rdata,
 	
-	output [31:0] data_mem_addr,
-	output data_mem_wen,
-	output [31:0] data_mem_wdata,
-	input [31:0] data_mem_rdata
+	// output [31:0] data_mem_addr,
+	// output data_mem_wen,
+	// output [31:0] data_mem_wdata,
+	// input [31:0] data_mem_rdata
 );
 
 wire [31:0] pc;
 wire [31:0] nextpc;
+assign nextpc = pc + 32'b4;
 ysyx_24070016_Reg #(
 	.WIDTH		(32            ),
 	.RESET_VAL	(32'h80000000  )
@@ -28,13 +29,9 @@ ysyx_24070016_Reg #(
 
 wire [31:0] inst;
 ysyx_24070016_IFU u_ysyx_24070016_IFU(
-	.pc             (pc             ),	//i
-	.inst_mem_rdata (inst_mem_rdata ),
-	.inst           (inst           ),	//o
-	.inst_mem_addr  (inst_mem_addr  ),
-	.inst_mem_wdata (inst_mem_wdata ),
-	.inst_mem_wen   (inst_mem_wen   )
-	);
+	.pc   (pc   ),
+	.inst (inst )
+);
 
 wire [4:0] dec_rs1;
 wire [4:0] dec_rs2;
