@@ -48,9 +48,10 @@ int init_pmem(uint8_t *pmem) {
 }
 
 bool in_pmem(uint32_t paddr) {
-	printf("%#x", paddr);
+	// printf("%#x", paddr);
 	// assert(0);
-	return paddr - PMEMBASE < PMEMSIZE;
+	bool in_pmem = paddr - PMEMBASE < PMEMSIZE;
+	return in_pmem;
 }
 
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - PMEMBASE; }
@@ -80,8 +81,6 @@ int main(int argc, char** argv) {
 	// nvboard_bind_all_pins(&dut);
 	// nvboard_init();
 	sim_init();
-	// assert(0);
-	printf("1123");
 
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = init_pmem(pmem);
