@@ -92,11 +92,13 @@ int main(int argc, char** argv) {
 		if (sim_cycle == 0) {
 			top->rst = 1;top->clk = 0;
 			step_and_dump_wave();
-
+			assert(0);
 			top->rst = 1;top->clk = 1;
 			step_and_dump_wave();
+			assert(0);
 		}
 
+		assert(0);
 		top->rst = 0;
 
 		top->clk = 0;
