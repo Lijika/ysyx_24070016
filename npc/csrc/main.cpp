@@ -48,6 +48,8 @@ int init_pmem(uint8_t *pmem) {
 }
 
 bool in_pmem(uint32_t paddr) {
+	printf("%#x", paddr);
+	assert(0);
 	return paddr - PMEMBASE < PMEMSIZE;
 }
 
