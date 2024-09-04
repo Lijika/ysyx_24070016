@@ -66,10 +66,10 @@ uint32_t host_read(void *addr, int len) {
 uint32_t pmem_read(uint32_t paddr, int len) {
 	if(in_pmem(paddr)) {return host_read(guest_to_host(paddr), len);}
 
-	printf("Memory access address out of bounds!");
-	printf("ERROR address : %#x", paddr);
-	// assert(0);
-	return 0;
+	printf("Memory access address out of bounds!\n");
+	printf("ERROR address : %#x\n", paddr);
+	assert(0);
+	// return 0;
 }
 
 int pmem_read_if(int pc) {
