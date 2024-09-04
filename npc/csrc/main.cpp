@@ -74,7 +74,6 @@ int pmem_read_if(int pc) {
 	return inst;
 }
 
-
 int main(int argc, char** argv) {
 	// nvboard_bind_all_pins(&dut);
 	// nvboard_init();
