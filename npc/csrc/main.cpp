@@ -47,11 +47,8 @@ int init_pmem(uint8_t *pmem) {
 	return sizeof(img) / sizeof(uint32_t);
 }
 
-bool in_pmem(uint32_t paddr) {
-	// printf("%#x", paddr);
-	// assert(0);
-	bool in_pmem = paddr - PMEMBASE < PMEMSIZE;
-	return in_pmem;
+bool in_pmem(int paddr) {
+	return paddr - PMEMBASE < PMEMSIZE;
 }
 
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - PMEMBASE; }
@@ -64,13 +61,14 @@ uint32_t host_read(void *addr, int len) {
 		case 4: return *(uint32_t *)addr;
 		default: assert(0);
 	}
-	return 0;
 }
 
 uint32_t pmem_read(uint32_t paddr, int len) {
-	// if(in_pmem(paddr)) 
-	return host_read(guest_to_host(paddr), len);
-	// assert(0);
+	if(in_pmem(paddr)) return host_read(guest_to_host(paddr), len);
+
+	printf("Memory access address out of bounds!");
+	printf("ERROR address : %#x", paddr);
+	assert(0);
 }
 
 int pmem_read_if(int pc) {
@@ -94,7 +92,7 @@ int main(int argc, char** argv) {
 			top->rst = 1;top->clk = 0;
 			step_and_dump_wave();
 
-			top->rst = 1;top->clk = 0;
+			top->rst = 1;top->clk = 1;
 			step_and_dump_wave();
 		}
 
