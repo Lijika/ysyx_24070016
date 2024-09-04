@@ -80,7 +80,8 @@ int main(int argc, char** argv) {
 	// nvboard_bind_all_pins(&dut);
 	// nvboard_init();
 	sim_init();
-	assert(0);
+	// assert(0);
+	printf("1123");
 
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = init_pmem(pmem);
