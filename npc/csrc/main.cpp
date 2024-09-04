@@ -49,7 +49,7 @@ int init_pmem(uint8_t *pmem) {
 
 bool in_pmem(uint32_t paddr) {
 	printf("%#x", paddr);
-	assert(0);
+	// assert(0);
 	return paddr - PMEMBASE < PMEMSIZE;
 }
 
@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
 	// nvboard_bind_all_pins(&dut);
 	// nvboard_init();
 	sim_init();
+	assert(0);
 
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = init_pmem(pmem);
