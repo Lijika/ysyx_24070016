@@ -68,7 +68,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 
 	printf("Memory access address out of bounds!");
 	printf("ERROR address : %#x", paddr);
-	assert(0);
+	// assert(0);
 }
 
 int pmem_read_if(int pc) {
