@@ -103,6 +103,7 @@ int main(int argc, char** argv) {
 		step_and_dump_wave();
 		top->clk = 1;
 		step_and_dump_wave();
+		sim_cycle++;
 	}
 
 	// nvboard_quit();
