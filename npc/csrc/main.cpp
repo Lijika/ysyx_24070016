@@ -61,6 +61,8 @@ uint32_t host_read(void *addr, int len) {
 		case 4: return *(uint32_t *)addr;
 		default: assert(0);
 	}
+
+	return 0;
 }
 
 uint32_t pmem_read(uint32_t paddr, int len) {
