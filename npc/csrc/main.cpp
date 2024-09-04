@@ -69,9 +69,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 }
 
 int pmem_read_if(int pc) {
-	uint32_t rdata = pmem_read((uint32_t)pc, 4);
-	int inst = (int)rdata;
-	return inst;
+	return pmem_read((uint32_t)pc, 4);
 }
 
 int main(int argc, char** argv) {
