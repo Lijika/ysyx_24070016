@@ -79,6 +79,7 @@ int pmem_read_if(int pc) {
 int main(int argc, char** argv) {
 	// nvboard_bind_all_pins(&dut);
 	// nvboard_init();
+	sim_init();
 
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = init_pmem(pmem);
