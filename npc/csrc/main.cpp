@@ -71,8 +71,8 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 	assert(0);
 }
 
-uint32_t pmem_read_if(uint32_t paddr) {
-	return pmem_read(paddr, 4);
+int pmem_read_if(int pc) {
+	return pmem_read(pc, 4);
 }
 
 
