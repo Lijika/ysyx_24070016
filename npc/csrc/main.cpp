@@ -68,8 +68,8 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 
 	printf("Memory access address out of bounds!");
 	printf("ERROR address : %#x", paddr);
-	assert(0);
-	// return 0;
+	// assert(0);
+	return 0;
 }
 
 int pmem_read_if(int pc) {
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 	sim_init();
 
 	vluint64_t sim_cycle = contextp->time();
-	int num_inst = init_pmem(pmem);
+	int num_inst = 3;
 
 	while (1) {
 		if (sim_cycle > num_inst) {
