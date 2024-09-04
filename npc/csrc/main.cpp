@@ -47,7 +47,7 @@ int init_pmem(uint8_t *pmem) {
 	return sizeof(img) / sizeof(uint32_t);
 }
 
-bool in_pmem(int paddr) {
+bool in_pmem(uint32_t paddr) {
 	return paddr - PMEMBASE < PMEMSIZE;
 }
 
@@ -67,7 +67,7 @@ uint32_t host_read(void *addr, int len) {
 
 uint32_t pmem_read(uint32_t paddr, int len) {
 	if(in_pmem(paddr)) return host_read(guest_to_host(paddr), len);
-	// assert(0);
+	assert(0);
 }
 
 int pmem_read_if(int pc) {
