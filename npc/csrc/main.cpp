@@ -47,7 +47,7 @@ int init_pmem(uint8_t *pmem) {
 	return sizeof(img) / sizeof(uint32_t);
 }
 
-bool in_pmem(uint32_t paddr) {
+bool in_pmem(int paddr) {
 	return paddr - PMEMBASE < PMEMSIZE;
 }
 
