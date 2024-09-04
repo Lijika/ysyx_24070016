@@ -25,7 +25,7 @@ void sim_init(){
 	top = new Vysyx_24070016_top;
 	contextp->traceEverOn(true);
 	top->trace(tfp, 1);
-	tfp->open("dump.fst");
+	tfp->open("dump.vcd");
 }
 
 void step_and_dump_wave(){
