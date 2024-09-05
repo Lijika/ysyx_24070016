@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
 	top->clk = 1;   // 时钟高电平，触发复位
 	step_and_dump_wave();  // 仿真一步，查看复位是否生效
 	top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
-	printf("pc = %#x, inst = %#x", top->inst_mem_addr, top->inst_mem_rdata);
+	printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 	sim_cycle++;
 
 	while (1) {
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
 		top->clk = 1;   // 时钟高电平，触发复位
 		step_and_dump_wave();  // 仿真一步，查看复位是否生效
 		top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
-		printf("pc = %#x, inst = %#x", top->inst_mem_addr, top->inst_mem_rdata);
+		printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 		sim_cycle++;
 	}
 
