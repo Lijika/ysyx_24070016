@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 	sim_cycle++;
 
 	while (1) {
-		if (sim_cycle > num_inst) {
+		if (sim_cycle > num_inst + 1) {
 			break;
 		}
 
