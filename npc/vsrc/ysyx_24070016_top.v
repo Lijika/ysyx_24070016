@@ -1,11 +1,11 @@
 module ysyx_24070016_top(
 	input clk,
-	input rst
+	input rst,
 	//Mem port
-	// output [31:0] inst_mem_addr,
-	// output inst_mem_wen,
-	// output [31:0] inst_mem_wdata,
-	// input [31:0] inst_mem_rdata,
+	output [31:0] inst_mem_addr,
+	output inst_mem_wen,
+	output [31:0] inst_mem_wdata,
+	input [31:0] inst_mem_rdata
 	
 	// output [31:0] data_mem_addr,
 	// output data_mem_wen,
@@ -29,8 +29,12 @@ ysyx_24070016_Reg #(
 
 wire [31:0] inst;
 ysyx_24070016_IFU u_ysyx_24070016_IFU(
-	.pc   (pc   ),
-	.inst (inst )
+	.pc             (pc             ),
+	.inst_mem_rdata (inst_mem_rdata ),
+	.inst_mem_addr  (inst_mem_addr  ),
+	.inst_mem_wdata (inst_mem_wdata ),
+	.inst_mem_wen   (inst_mem_wen   ),
+	.inst           (inst           )
 );
 
 wire [4:0] dec_rs1;

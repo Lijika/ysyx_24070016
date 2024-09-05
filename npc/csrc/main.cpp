@@ -68,7 +68,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 
 	printf("Memory access address out of bounds!\n");
 	printf("ERROR address : %#x\n", paddr);
-	// assert(0);
+	assert(0);
 	return 0;
 }
 
@@ -85,25 +85,26 @@ int main(int argc, char** argv) {
 	int num_inst = 3;
 
 	while (1) {
-		if (sim_cycle > num_inst) {
+		if (sim_cycle >= num_inst) {
 			break;
 		}
 
 		if (sim_cycle == 0) {
-			top->rst = 1;top->clk = 0;
+			// top->rst = 1;top->clk = 0;
+			// step_and_dump_wave();
+			top->rst = 1;top->clk ^= 1;
 			step_and_dump_wave();
-			assert(0);
-			top->rst = 1;top->clk = 1;
-			step_and_dump_wave();
-			assert(0);
+			sim_cycle++;
+			continue;
 		}
 
-		assert(0);
+		// assert(0);
 		top->rst = 0;
 
 		top->clk = 0;
 		step_and_dump_wave();
 		top->clk = 1;
+		top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
 		step_and_dump_wave();
 		sim_cycle++;
 	}
