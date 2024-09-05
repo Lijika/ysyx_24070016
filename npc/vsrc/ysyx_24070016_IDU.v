@@ -60,7 +60,7 @@ wire inst_ebreak = op_SYSTEM & func3_000 & EBREAK & (dec_rs1 == 5'b0) & (dec_rd 
 
 //instruction type
 wire [4:0] num_type;
-wire I_type = op_imm;
+wire I_type = op_imm & op_SYSTEM;
 wire S_type = 1'b0;
 wire B_type = 1'b0;
 wire U_type = 1'b0;
