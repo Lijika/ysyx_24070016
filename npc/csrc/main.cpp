@@ -89,14 +89,14 @@ int main(int argc, char** argv) {
 			break;
 		}
 
-		if (sim_cycle == 0) {
-			// top->rst = 1;top->clk = 0;
-			// step_and_dump_wave();
-			top->rst = 1;top->clk ^= 1;
-			step_and_dump_wave();
-			sim_cycle++;
-			continue;
-		}
+		// if (sim_cycle == 0) {
+		// 	// top->rst = 1;top->clk = 0;
+		// 	// step_and_dump_wave();
+		// 	top->rst = 1;top->clk ^= 1;
+		// 	step_and_dump_wave();
+		// 	sim_cycle++;
+		// 	continue;
+		// }
 
 		// assert(0);
 		top->rst = 0;
@@ -104,6 +104,7 @@ int main(int argc, char** argv) {
 		top->clk = 0;
 		step_and_dump_wave();
 		top->clk = 1;
+		printf("top->addr: %#x", top->inst_mem_addr);
 		top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
 		step_and_dump_wave();
 		sim_cycle++;
