@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 	sim_cycle++;
 
 	while (1) {
-		if(sim_cycle = 8) break;
+		if(sim_cycle = 10) break;
 		top->rst = 0;   // 复位信号设为低电平
 		top->clk = 0;   // 时钟低电平
 		step_and_dump_wave();  // 仿真一步
