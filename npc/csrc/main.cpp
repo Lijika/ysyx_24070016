@@ -81,6 +81,8 @@ int pmem_read_if(int pc) {
 }
 
 void ebreak_detected(svBit ebreak) {
+	printf("ebreak = %d", ebreak);
+	assert(0);
 	if(ebreak) { exit(0); }
 }
 
