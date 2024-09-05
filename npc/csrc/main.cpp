@@ -84,15 +84,24 @@ int main(int argc, char** argv) {
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = 3;
 
-	top->rst = 1;
-	top->clk ^= 1;
-	step_and_dump_wave();
-	printf("clk= %d, rst = %d, inst_mem_addr = %#x", top->clk, top->rst, top->inst_mem_addr);
-	// assert(0);
-	top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
-	top->clk ^= 1;
-	step_and_dump_wave();
-	sim_cycle++;
+
+	top->rst = 1;   // 复位信号设为高电平
+	top->clk = 0;   // 时钟低电平
+	step_and_dump_wave();  // 仿真一步
+	top->clk = 1;   // 时钟高电平，触发复位
+	step_and_dump_wave();  // 仿真一步，查看复位是否生效
+	printf("clk= %d, rst = %d, inst_mem_addr = %#x\n", top->clk, top->rst, top->inst_mem_addr);
+	assert(0);
+
+	// top->rst = 1;
+	// top->clk ^= 1;
+	// step_and_dump_wave();
+	// printf("clk= %d, rst = %d, inst_mem_addr = %#x\n", top->clk, top->rst, top->inst_mem_addr);
+	// // assert(0);
+	// top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
+	// top->clk ^= 1;
+	// step_and_dump_wave();
+	// sim_cycle++;
 
 	while (1) {
 		if (sim_cycle >= num_inst) {
