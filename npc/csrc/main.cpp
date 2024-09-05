@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 	top->clk ^= 1;
 	step_and_dump_wave();
 	printf("clk= %d, rst = %d, inst_mem_addr = %#x", top->clk, top->rst, top->inst_mem_addr);
-	assert(0);
+	// assert(0);
 	top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
 	top->clk ^= 1;
 	step_and_dump_wave();
