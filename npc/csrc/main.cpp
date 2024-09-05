@@ -80,7 +80,7 @@ int pmem_read_if(int pc) {
 	return pmem_read((uint32_t)pc, 4);
 }
 
-void ebreak_detected(bool ebreak) {
+void ebreak_detected(svBit ebreak) {
 	if(ebreak) { exit(0); }
 }
 
