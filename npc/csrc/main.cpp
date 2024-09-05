@@ -86,6 +86,13 @@ int pmem_read_if(int pc) {
 
 void ebreak_detected(svBit ebreak) {
 	if(ebreak) { 
+		if (tfp) {
+			tfp->close();
+			delete tfp;
+		}
+		delete top;
+		delete contextp;
+		
 		printf("//////////////////////Simulation Finish//////////////////////\n");
 		printf("simulation cycles = %d\n", (int)sim_cycle);
 		printf("simulation instructions = %d\n", num_inst);
