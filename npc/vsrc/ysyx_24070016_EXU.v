@@ -23,7 +23,7 @@ ysyx_24070016_exu_alu u_ysyx_24070016_exu_alu(
 
 assign wrback_result = alu_result;
 
-import "DPC-C" function void ebreak_detected(input bit ebreak);
+import "DPI-C" function void ebreak_detected(input bit ebreak);
 
 endmodule //ysyx_24070016_EXU 
 
