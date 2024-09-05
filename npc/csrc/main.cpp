@@ -84,6 +84,14 @@ int main(int argc, char** argv) {
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = 3;
 
+	top->rst = 1;
+	top->clk ^= 1;
+	step_and_dump_wave();
+	top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
+	top->clk ^= 1;
+	step_and_dump_wave();
+	sim_cycle++;
+
 	while (1) {
 		if (sim_cycle >= num_inst) {
 			break;
@@ -100,12 +108,10 @@ int main(int argc, char** argv) {
 
 		// assert(0);
 		top->rst = 0;
-
-		top->clk = 0;
+		top->clk ^= 1;
 		step_and_dump_wave();
-		top->clk = 1;
-		printf("top->addr: %#x", top->inst_mem_addr);
 		top->inst_mem_rdata = pmem_read_if(top->inst_mem_addr);
+		top->clk ^= 1;
 		step_and_dump_wave();
 		sim_cycle++;
 	}

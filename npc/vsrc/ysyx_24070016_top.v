@@ -16,10 +16,7 @@ module ysyx_24070016_top(
 wire [31:0] pc;
 wire [31:0] nextpc;
 assign nextpc = pc + 32'h00000004;
-ysyx_24070016_Reg #(
-	.WIDTH		(32            ),
-	.RESET_VAL	(32'h80000000  )
-	)u_ysyx_24070016_PCreg(
+ysyx_24070016_Reg #(32, 32'h80000000)u_ysyx_24070016_PCreg(
 	.clk	(clk     ),
 	.rst	(rst     ),
 	.din	(nextpc  ),
