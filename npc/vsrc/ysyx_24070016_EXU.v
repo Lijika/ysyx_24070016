@@ -26,6 +26,8 @@ assign wrback_result = alu_result;
 
 import "DPI-C" function void ebreak_detected(input bit ebreak);
 
+ebreak_detected(ebreak);
+
 /* verilator lint_off UNUSEDSIGNAL */
 endmodule //ysyx_24070016_EXU 
 
