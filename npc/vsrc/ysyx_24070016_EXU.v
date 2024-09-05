@@ -9,7 +9,7 @@ module ysyx_24070016_EXU (
 
 	output [31:0] wrback_result
 );
-
+/* verilator lint_off UNUSEDSIGNAL */
 wire [31:0] alu_src1;
 wire [31:0] alu_src2;
 assign alu_src1 = exu_src1;
@@ -25,5 +25,6 @@ assign wrback_result = alu_result;
 
 import "DPI-C" function void ebreak_detected(input bit ebreak);
 
+/* verilator lint_off UNUSEDSIGNAL */
 endmodule //ysyx_24070016_EXU 
 
