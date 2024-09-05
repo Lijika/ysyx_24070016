@@ -1,5 +1,7 @@
 module ysyx_24070016_EXU (
+/* verilator lint_off UNUSEDSIGNAL */
 	//data
+	
 	input [31:0] exu_src1,
 	input [31:0] exu_src2,
 	input [31:0] exu_imm,
@@ -9,7 +11,6 @@ module ysyx_24070016_EXU (
 
 	output [31:0] wrback_result
 );
-/* verilator lint_off UNUSEDSIGNAL */
 wire [31:0] alu_src1;
 wire [31:0] alu_src2;
 assign alu_src1 = exu_src1;
