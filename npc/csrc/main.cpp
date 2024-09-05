@@ -98,11 +98,11 @@ int main(int argc, char** argv) {
 	sim_cycle++;
 
 	while (1) {
-		if (sim_cycle >= num_inst) {
+		if (sim_cycle > num_inst) {
 			break;
 		}
 
-		top->rst = 0;   // 复位信号设为高电平
+		top->rst = 0;   // 复位信号设为低电平
 		top->clk = 0;   // 时钟低电平
 		step_and_dump_wave();  // 仿真一步
 		top->clk = 1;   // 时钟高电平，触发复位
