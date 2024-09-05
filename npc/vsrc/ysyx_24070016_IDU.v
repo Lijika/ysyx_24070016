@@ -7,7 +7,8 @@ module ysyx_24070016_IDU (
 	output [31:0] dec_imm,
 	//control
 	output rf_wen,
-	output sel_rs2Isimm
+	output sel_rs2Isimm,
+	output ebreak
 );
 /* verilator lint_off UNUSEDSIGNAL */
 assign dec_rs1 = inst[19:15];
@@ -45,11 +46,17 @@ wire func3_101 = (func3 == 3'b101);
 wire func3_110 = (func3 == 3'b110);
 wire func3_111 = (func3 == 3'b111);
 
+wire EBREAK = (dec_imm == 32'b1);
+
 //opcode
 wire op_imm = opcode_6_0 & opcode_5_4_01 & opcode_3_2_00 & opcode_1_0_11;
 
+wire op_SYSTEM = opcode_6_1 & opcode_5_4_11 & opcode_3_2_00 & opcode_1_0_11;
+
 //decode instruction
 wire inst_addi = op_imm & func3_000;
+
+wire inst_ebreak = op_SYSTEM & func3_000 & EBREAK & (dec_rs1 == 5'b0) & (dec_rd == 5'b0);
 
 //instruction type
 wire [4:0] num_type;
@@ -72,5 +79,6 @@ assign dec_imm = imm;
 //control sig
 assign rf_wen = inst_addi;
 assign sel_rs2Isimm = inst_addi;
+assign ebreak = inst_ebreak;
 /* verilator lint_off UNUSEDSIGNAL */
 endmodule

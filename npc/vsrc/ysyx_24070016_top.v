@@ -39,14 +39,28 @@ wire [4:0] dec_rs2;
 wire [4:0] dec_rd;
 wire [31:0] dec_imm;
 wire rf_wen, sel_rs2Isimm;
+wire ebreak;
 ysyx_24070016_IDU u_ysyx_24070016_IDU(
-	.inst         (inst         ),	//i
-	.dec_rs1      (dec_rs1      ),	//o
+	.inst         (inst         ),
+	.dec_rs1      (dec_rs1      ),
 	.dec_rs2      (dec_rs2      ),
 	.dec_rd       (dec_rd       ),
 	.dec_imm      (dec_imm      ),
 	.rf_wen       (rf_wen       ),
-	.sel_rs2Isimm (sel_rs2Isimm )
+	.sel_rs2Isimm (sel_rs2Isimm ),
+	.ebreak       (ebreak       )
+);
+
+
+ysyx_24070016_IDU u_ysyx_24070016_IDU(
+	.inst            (inst            ),
+	.dec_rs1         (dec_rs1         ),
+	.dec_rs2         (dec_rs2         ),
+	.dec_rd          (dec_rd          ),
+	.dec_imm         (dec_imm         ),
+	.rf_wen          (rf_wen          ),
+	.sel_rs2Isimm    (sel_rs2Isimm    ),
+	.ebreak_detected (ebreak_detected )
 );
 
 wire [4:0] rf_raddr1 = dec_rs1;
@@ -80,7 +94,9 @@ ysyx_24070016_EXU u_ysyx_24070016_EXU(
 	.exu_src2      (exu_src2      ),
 	.exu_imm       (exu_imm       ),
 	.sel_rs2Isimm  (sel_rs2Isimm  ),
+	.ebreak        (ebreak        ),
 	.wrback_result (wrback_result )
 );
+
 
 endmodule

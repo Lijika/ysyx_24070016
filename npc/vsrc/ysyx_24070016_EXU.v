@@ -5,6 +5,7 @@ module ysyx_24070016_EXU (
 	input [31:0] exu_imm,
 	//control
 	input sel_rs2Isimm,
+	input ebreak,
 
 	output [31:0] wrback_result
 );
@@ -21,6 +22,8 @@ ysyx_24070016_exu_alu u_ysyx_24070016_exu_alu(
 );
 
 assign wrback_result = alu_result;
+
+import "DPC-C" function void ebreak_detected(input bit ebreak);
 
 endmodule //ysyx_24070016_EXU 
 

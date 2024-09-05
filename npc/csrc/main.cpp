@@ -40,7 +40,8 @@ int init_pmem(uint8_t *pmem) {
 	const uint32_t img [] = {
 		0x01000093,		//li	ra,16
 		0x01008113,		//addi	sp,ra,16
-		0x01f08113		//addi	sp,ra,31
+		0x01f08113,		//addi	sp,ra,31
+		0x00100073		//ebreak
 	};
 
 	memcpy(pmem, img, sizeof(img));
@@ -77,6 +78,10 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 int pmem_read_if(int pc) {
 	printf("in pmem_read_if pc = %#x\n", pc);
 	return pmem_read((uint32_t)pc, 4);
+}
+
+void ebreak_detected(bool ebreak) {
+	if(ebreak) { exit(0); }
 }
 
 int main(int argc, char** argv) {
