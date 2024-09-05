@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
 	step_and_dump_wave();  // 仿真一步
 
 	printf("//////////////////////Simulation Finish//////////////////////\n");
-	printf("simulation cycles = %d\n", sim_cycle);
+	printf("simulation cycles = %d\n", (int)sim_cycle);
 	printf("simulation instructions = %d\n", num_inst);
 	// nvboard_quit();
 	if (tfp) {
