@@ -64,6 +64,8 @@ uint32_t host_read(void *addr, int len) {
 }
 
 uint32_t pmem_read(uint32_t paddr, int len) {
+	// printf("in pmem_read paddr = %#x\n", paddr);
+
 	if(in_pmem(paddr)) {return host_read(guest_to_host(paddr), len);}
 
 	printf("Memory access address out of bounds!\n");
@@ -83,7 +85,7 @@ int main(int argc, char** argv) {
 	sim_init();
 
 	vluint64_t sim_cycle = contextp->time();
-	int num_inst = 3;
+	int num_inst = init_pmem(pmem);
 
 
 	top->rst = 1;   // 复位信号设为高电平
