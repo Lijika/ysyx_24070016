@@ -73,7 +73,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 }
 
 int pmem_read_if(int pc) {
-	printf("in pmem_read_if pc = %d %#x\n", pc);
+	printf("in pmem_read_if pc = %#x\n", pc);
 	return pmem_read((uint32_t)pc, 4);
 }
 
