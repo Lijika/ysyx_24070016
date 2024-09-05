@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 	sim_cycle++;
 
 	while (1) {
-		if (sim_cycle > num_inst + 1) {
+		if (sim_cycle > num_inst) {
 			break;
 		}
 
@@ -111,6 +111,9 @@ int main(int argc, char** argv) {
 		printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 		sim_cycle++;
 	}
+
+	top->clk = 0;   // 时钟低电平
+	step_and_dump_wave();  // 仿真一步
 
 	// nvboard_quit();
 	if (tfp) {
