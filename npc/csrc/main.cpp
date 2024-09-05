@@ -92,7 +92,6 @@ int main(int argc, char** argv) {
 	vluint64_t sim_cycle = contextp->time();
 	int num_inst = init_pmem(pmem);
 
-
 	top->rst = 1;   // 复位信号设为高电平
 	top->clk = 0;   // 时钟低电平
 	step_and_dump_wave();  // 仿真一步
@@ -103,10 +102,6 @@ int main(int argc, char** argv) {
 	sim_cycle++;
 
 	while (1) {
-		if (sim_cycle > num_inst) {
-			break;
-		}
-
 		top->rst = 0;   // 复位信号设为低电平
 		top->clk = 0;   // 时钟低电平
 		step_and_dump_wave();  // 仿真一步
@@ -120,6 +115,9 @@ int main(int argc, char** argv) {
 	top->clk = 0;   // 时钟低电平
 	step_and_dump_wave();  // 仿真一步
 
+	printf("//////////////////////Simulation Finish//////////////////////\n");
+	printf("simulation cycles = %d\n", sim_cycle);
+	printf("simulation instructions = %d\n", num_inst);
 	// nvboard_quit();
 	if (tfp) {
 		tfp->close();
