@@ -85,6 +85,7 @@ int pmem_read_if(int pc) {
 }
 
 void ebreak_detected(svBit ebreak) {
+	assert(0);
 	if(ebreak) { 
 		if (tfp) {
 			tfp->close();
