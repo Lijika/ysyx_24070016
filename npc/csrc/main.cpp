@@ -110,29 +110,37 @@ int main(int argc, char** argv) {
 	sim_cycle = contextp->time();
 	num_inst = init_pmem(pmem);
 
-	top->rst = 1;   // 复位信号设为高电平
-	top->clk = 0;   // 时钟低电平
-	step_and_dump_wave();  // 仿真一步
-	top->clk ^= 1;   // 时钟高电平，触发复位
-	step_and_dump_wave();  // 仿真一步
-	top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
-	// printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
-	sim_cycle++;
+	// top->rst = 1;   // 复位信号设为高电平
+	// top->clk = 0;   // 时钟低电平
+	// step_and_dump_wave();  // 仿真一步
+	// top->clk ^= 1;   // 时钟高电平，触发复位
+	// step_and_dump_wave();  // 仿真一步
+	// top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
+	// // printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
+	// sim_cycle++;
 
-	while (1) {
-		// if(sim_cycle == 10) break;
-		top->rst = 0;   // 复位信号设为低电平
-		top->clk = 0;   // 时钟低电平
-		step_and_dump_wave();  // 仿真一步
-		top->clk = 1;   // 时钟高电平，触发复位
-		step_and_dump_wave();  // 仿真一步
-		top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
-		printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
-		sim_cycle++;
+	// while (1) {
+	// 	// if(sim_cycle == 10) break;
+	// 	top->rst = 0;   // 复位信号设为低电平
+	// 	top->clk = 0;   // 时钟低电平
+	// 	step_and_dump_wave();  // 仿真一步
+	// 	top->clk = 1;   // 时钟高电平，触发复位
+	// 	step_and_dump_wave();  // 仿真一步
+	// 	top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
+	// 	printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
+	// 	sim_cycle++;
+	// }
+
+	int half_clock_period = 5; //1周期10个步长
+	top->rst = 1;
+
+	while(1) {
+		if(contextp->time() % half_clock_period == 0) top->clk ^= 1;
+		if(contextp->time() >= 10) top->rst = 0;
+		step_and_dump_wave();
+		
+		if(top->clk == 1) top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
 	}
-
-	top->clk = 0;   // 时钟低电平
-	step_and_dump_wave();  // 仿真一步
 	
 	// nvboard_quit();
 	if (tfp) {
