@@ -85,8 +85,8 @@ int pmem_read_if(int pc) {
 }
 
 void ebreak_detected(svBit ebreak) {
-	// contextp->timeInc(1);
-	// tfp->dump(contextp->time());
+	contextp->timeInc(1);
+	tfp->dump(contextp->time());
 	// assert(0);
 	if(ebreak) { 
 		// step_and_dump_wave();
