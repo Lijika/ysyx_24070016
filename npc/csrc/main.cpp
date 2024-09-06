@@ -132,6 +132,7 @@ int main(int argc, char** argv) {
 	// }
 
 	int half_clock_period = 5; //1周期10个步长
+	top->clk = 0;
 	top->rst = 1;
 
 	while(1) {
