@@ -80,8 +80,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 }
 
 int pmem_read_if(int pc) {
-	printf("in pmem_read_if pc = %#x\n", pc);
-
+	// printf("in pmem_read_if pc = %#x\n", pc);
 	return pmem_read((uint32_t)pc, 4);
 }
 
@@ -131,7 +130,7 @@ int main(int argc, char** argv) {
 	// 	sim_cycle++;
 	// }
 
-	int half_clock_period = 5; //1周期10个步长
+	int half_clock_period = 2; //1周期10个步长
 	top->clk = 1;
 	top->rst = 1;
 
