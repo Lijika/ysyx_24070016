@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
 	top->rst = 1;
 
 	while(1) {
-		if(contextp->time() % 10) sim_cycle++;
+		if(contextp->time() % 4 == 0) sim_cycle++;
 
 		if(contextp->time() % half_clock_period == 0) top->clk ^= 1;
 		if(contextp->time() >= 10) top->rst = 0;
