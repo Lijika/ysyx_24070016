@@ -33,9 +33,9 @@ void sim_init(){
 }
 
 void step_and_dump_wave(){
-	top->eval();
 	contextp->timeInc(1);
 	tfp->dump(contextp->time());
+	top->eval();
 }
 
 uint8_t pmem[PMEMSIZE] __attribute((aligned(4096))) = {};
