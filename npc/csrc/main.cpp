@@ -80,7 +80,7 @@ uint32_t pmem_read(uint32_t paddr, int len) {
 }
 
 int pmem_read_if(int pc) {
-	// printf("in pmem_read_if pc = %#x\n", pc);
+	printf("in pmem_read_if pc = %#x\n", pc);
 
 	return pmem_read((uint32_t)pc, 4);
 }
@@ -94,7 +94,7 @@ void ebreak_detected(svBit ebreak) {
 		}
 		delete top;
 		delete contextp;
-	assert(0);
+	// assert(0);
 	printf("//////////////////////Simulation Finish//////////////////////\n");
 	printf("simulation cycles = %d\n", (int)sim_cycle);
 	printf("simulation instructions = %d\n", num_inst);
@@ -132,17 +132,18 @@ int main(int argc, char** argv) {
 	// }
 
 	int half_clock_period = 5; //1周期10个步长
-	
-	top->clk = 0;
+	top->clk = 1;
 	top->rst = 1;
-	step_and_dump_wave();
 
 	while(1) {
+		if(contextp->time() % 10) sim_cycle++;
+
 		if(contextp->time() % half_clock_period == 0) top->clk ^= 1;
 		if(contextp->time() >= 10) top->rst = 0;
 		step_and_dump_wave();
 		
 		if(top->clk == 1) top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
+		// printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 	}
 	
 	// nvboard_quit();
