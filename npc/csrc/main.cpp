@@ -85,6 +85,8 @@ int pmem_read_if(int pc) {
 }
 
 void ebreak_detected(svBit ebreak) {
+	contextp->timeInc(1);
+	tfp->dump(contextp->time());
 	// assert(0);
 	if(ebreak) { 
 		// step_and_dump_wave();
@@ -115,7 +117,7 @@ int main(int argc, char** argv) {
 	top->clk = 0;   // 时钟低电平
 	step_and_dump_wave();  // 仿真一步
 
-	top->clk ^= 1;   // 时钟高电平，触发复位
+	top->clk = 1;   // 时钟高电平，触发复位
 	top->eval();
 	top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
 	step_and_dump_wave();
