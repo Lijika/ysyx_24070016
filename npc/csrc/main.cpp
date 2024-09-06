@@ -136,10 +136,10 @@ int main(int argc, char** argv) {
 	printf("contextp->time() = %d", (int)contextp->time());
 
 	while(1) {
-		if(contextp->time() % 4 == 0) sim_cycle++;
+		if(contextp->time() % (2*half_clock_period) == 0) sim_cycle++;
 
 		if(contextp->time() % half_clock_period == 0) top->clk ^= 1;
-		if(contextp->time() >= 10) top->rst = 0;
+		if(contextp->time() >= (2*half_clock_period)) top->rst = 0;
 		step_and_dump_wave();
 		
 		if(top->clk == 1) top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
