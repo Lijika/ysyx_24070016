@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
 	int half_clock_period = 2; //1周期10个步长
 	top->clk = 1;
 	top->rst = 1;
-	printf("contextp->time() = %#x", contextp->time());
+	printf("contextp->time() = %d", contextp->time());
 
 	while(1) {
 		if(contextp->time() % 4 == 0) sim_cycle++;
