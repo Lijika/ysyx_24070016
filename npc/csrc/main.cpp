@@ -33,7 +33,6 @@ void sim_init(){
 }
 
 void step_and_dump_wave(){
-	assert(sim_cycle < 3);
 	top->eval();
 	contextp->timeInc(1);
 	tfp->dump(contextp->time());
