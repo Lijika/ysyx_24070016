@@ -20,22 +20,30 @@ ifeq ($(findstring $(MAKECMDGOALS),clean|clean-all|html),)
 $(info # Building $(NAME)-$(MAKECMDGOALS) [$(ARCH)])
 
 ### Check: environment variable `$AM_HOME` looks sane
+#### wildcard 函数，作用是查找并返回符合指定路径的文件名。
 ifeq ($(wildcard $(AM_HOME)/am/include/am.h),)
   $(error $$AM_HOME must be an AbstractMachine repo)
 endif
 
 ### Check: environment variable `$ARCH` must be in the supported list
+#### $(shell ...) 函数执行一个 shell 命令，并将其输出返回。
+#### $(notdir ...) 函数会去除文件路径，只保留文件名。例如，如果输出文件路径是 /path/to/file.mk，$(notdir) 将返回 file.mk。
+#### $(basename ...) 函数会去掉文件的扩展名，返回文件名的基础部分。例如，file.mk 变为 file。
+#### filter 函数用于在一个列表中筛选符合条件的元素。
 ARCHS = $(basename $(notdir $(shell ls $(AM_HOME)/scripts/*.mk)))
 ifeq ($(filter $(ARCHS), $(ARCH)), )
   $(error Expected $$ARCH in {$(ARCHS)}, Got "$(ARCH)")
 endif
 
 ### Extract instruction set architecture (`ISA`) and platform from `$ARCH`. Example: `ARCH=x86_64-qemu -> ISA=x86_64; PLATFORM=qemu`
+#### subst 函数的语法是 $(subst find, replace, text)，它将 text 中的 find 替换为 replace。
+#### word 函数的语法是 $(word n, text)，它从 text 中提取第 n 个单词。
 ARCH_SPLIT = $(subst -, ,$(ARCH))
 ISA        = $(word 1,$(ARCH_SPLIT))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
 
 ### Check if there is something to build
+#### flavor 检查变量类型，undefined：变量未定义；simple：变量是简单变量（使用 = 定义）；recursive：变量是递归变量（使用 := 定义）。
 ifeq ($(flavor SRCS), undefined)
   $(error Nothing to build)
 endif
@@ -56,6 +64,9 @@ IMAGE     = $(abspath $(IMAGE_REL))
 ARCHIVE   = $(WORK_DIR)/build/$(NAME)-$(ARCH).a
 
 ### Collect the files to be linked: object files (`.o`) and libraries (`.a`)
+#### $(addsuffix .c,foo bar) produces the result ‘foo.c bar.c’.
+#### $(addprefix src/,foo bar) produces the result ‘src/foo src/bar’.
+#### sort 函数用于对列表中的元素按字母顺序进行排序，并删除重复项。
 OBJS      = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS))))
 LIBS     := $(sort $(LIBS) am klib) # lazy evaluation ("=") causes infinite recursions
 LINKAGE   = $(OBJS) \
