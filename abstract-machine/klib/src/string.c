@@ -42,8 +42,8 @@ int strcmp(const char *s1, const char *s2) {
 	s1++;
 	s2++;
   }
-  unsigned char ch1 = *s1;
-  unsigned char ch2 = *s2;
+  const unsigned char ch1 = *s1;
+  const unsigned char ch2 = *s2;
 
   return ch1 - ch2;
 }
