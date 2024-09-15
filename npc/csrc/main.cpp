@@ -135,10 +135,10 @@ int main(int argc, char** argv) {
 		top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
 		step_and_dump_wave();
 		assert(sim_cycle < 3);
-		printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
+		// printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 		sim_cycle++;
 	}
-	
+
 	if (tfp) {
 		tfp->close();
 		delete tfp;
