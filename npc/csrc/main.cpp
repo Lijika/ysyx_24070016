@@ -138,24 +138,7 @@ int main(int argc, char** argv) {
 		printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
 		sim_cycle++;
 	}
-
-	// int half_clock_period = 2; //1周期10个步长
-	// top->clk = 1;
-	// top->rst = 1;
-	// printf("contextp->time() = %d", (int)contextp->time());
-
-	// while(1) {
-	// 	if(contextp->time() % (2*half_clock_period) == 0) sim_cycle++;
-
-	// 	if(contextp->time() % half_clock_period == 0) top->clk ^= 1;
-	// 	if(contextp->time() >= (2*half_clock_period)) top->rst = 0;
-	// 	step_and_dump_wave();
-		
-	// 	if(top->clk == 1) top->inst_mem_rdata = pmem_read_if((int)top->inst_mem_addr);
-	// 	// printf("pc = %#x, inst = %#x\n", top->inst_mem_addr, top->inst_mem_rdata);
-	// }
 	
-	// nvboard_quit();
 	if (tfp) {
 		tfp->close();
 		delete tfp;
