@@ -46,7 +46,7 @@ int sprintf(char *out, const char *fmt, ...) {
   va_list ap;
   
   va_start(ap, fmt);
-  while(*fmt) {
+  while(*fmt != '\0') {
     if(*fmt != '%') {
       *(out++) = *(fmt++);
       ch_num++;
@@ -72,6 +72,7 @@ int sprintf(char *out, const char *fmt, ...) {
         break;
       }
     }
+    fmt += 2;
   }
   va_end(ap);
 
