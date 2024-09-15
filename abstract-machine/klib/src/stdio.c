@@ -78,6 +78,7 @@ int sprintf(char *out, const char *fmt, ...) {
         break;
       }
     }
+    assert(0);
     fmt += 2;
   }
   va_end(ap);
