@@ -11,8 +11,7 @@ int int2str(int src, char *str) {
 
   if(src == 0) {
     str[i++] = '0';
-  }
-  if(src < 0) {
+  } else if(src < 0) {
     src = - src;
     is_neg = 1;
   }
@@ -23,7 +22,6 @@ int int2str(int src, char *str) {
   }
 
   if(is_neg) { str[i++] = '-'; }
-  str[i] = '\0';
 
   int lchar = 0;
   int rchar = i - 1;
@@ -67,8 +65,9 @@ int sprintf(char *out, const char *fmt, ...) {
       case 'd': {
         int num = va_arg(ap, int);
         int d_ch_num = int2str(num, out);
-        out += d_ch_num;
+	    	out += d_ch_num;
         ch_num += d_ch_num;
+	    	*out = '\0';
         break;
       }
       default: {
@@ -78,9 +77,9 @@ int sprintf(char *out, const char *fmt, ...) {
         break;
       }
     }
-    // assert(0);
     fmt += 2;
   }
+  *out = '\0';
   va_end(ap);
 
   return ch_num;
