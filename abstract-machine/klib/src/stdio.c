@@ -8,8 +8,12 @@
 int int2str(int src, char *str) {
   int is_neg = 0;
   int i = 0;
+
+  if(src == 0) {
+    str[i++] = '0';
+  }
   if(src < 0) {
-    src *= -1;
+    src = - src;
     is_neg = 1;
   }
 
@@ -56,7 +60,8 @@ int sprintf(char *out, const char *fmt, ...) {
     switch(*(fmt+1)) {
       case 's': {
         char *str = va_arg(ap, char*);
-        while(*str) { *(out++) = *(str++); ch_num++; }
+        while(*str != '\0') { *(out++) = *(str++); ch_num++; }
+        *out = '\0';
         break;
       }
       case 'd': {
@@ -68,7 +73,8 @@ int sprintf(char *out, const char *fmt, ...) {
       }
       default: {
         *(out++) = *fmt;
-        ch_num++;
+        *(out++) = *(fmt+1);
+        ch_num += 2;
         break;
       }
     }
