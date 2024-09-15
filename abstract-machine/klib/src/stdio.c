@@ -14,7 +14,7 @@ int int2str(int src, char *str) {
   }
 
   while(src) {
-    str[i++] = (src % 10) + '\0';
+    str[i++] = (src % 10) + '0';
     src /= 10;
   }
 
