@@ -32,6 +32,15 @@ typedef struct watchpoint {
   char EXPR[32*32];
 } WP;
 
+typedef struct iRingbuf {
+  char **buffer;
+  int length;
+  int wr_ptr;
+} iRingbuf;
+
+extern iRingbuf *rb;
+void free_iringbuf();
+
 WP* new_wp();
 WP* find_wp (int wp_no, bool *success);
 void free_wp(WP *wp);

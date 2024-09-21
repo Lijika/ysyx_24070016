@@ -17,7 +17,6 @@
 #define __CPU_DECODE_H__
 
 #include <isa.h>
-#define IRINGBUF_LEN 18
 
 typedef struct Decode {
   vaddr_t pc;
@@ -27,12 +26,6 @@ typedef struct Decode {
   IFDEF(CONFIG_ITRACE, char logbuf[128]);
 } Decode;
 
-typedef struct iRingbuf {
-  char buffer[IRINGBUF_LEN][128];
-  int wr_ptr;
-} iRingbuf;
-
-extern iRingbuf *rb;
 // --- pattern matching mechanism ---
 __attribute__((always_inline))
 static inline void pattern_decode(const char *str, int len,
