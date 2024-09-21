@@ -30,6 +30,7 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+iRingbuf *rb;
 
 void device_update();
 
@@ -49,6 +50,19 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   }
 #endif
 }
+
+// static void init_iringbuf(int length, iRingbuf *ring_buffer) {
+//   ring_buffer = (iRingbuf *)malloc(sizeof(iRingbuf));
+//   ring_buffer->buffer = (char **)malloc(length * sizeof(char *));
+  
+//   for(int i = 0; i < length; i++) {
+//     ring_buffer->buffer[i] = (char *)malloc(IRINGBUF_UNIT_SIZE * sizeof(char));
+//     memset(ring_buffer->buffer[i], 0, IRINGBUF_UNIT_SIZE);
+//   }
+
+//   ring_buffer->length = length;
+//   ring_buffer->wr_ptr = 0;
+// }
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -79,6 +93,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
 #endif
+  
 }
 
 static void execute(uint64_t n) {
