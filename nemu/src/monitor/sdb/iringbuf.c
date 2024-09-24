@@ -1,4 +1,5 @@
 #include "sdb.h"
+
 #define IRINGBUF_LEN 18
 #define IRINGBUF_UNIT_SIZE 128
 
@@ -23,4 +24,27 @@ void free_iringbuf() {
   }
   free(rb->buffer);
   free(rb);
+}
+
+void add_instruction(Decode *s) {
+  char *p = rb->buffer[rb->wr_ptr];
+  p += snprintf(p, IRINGBUF_UNIT_SIZE, FMT_WORD ":", s->pc);
+  int ilen = s->snpc - s->pc;
+
+#ifndef CONFIG_ISA_loongarch32r
+  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  disassemble(p, rb->buffer[rb->wr_ptr] + IRINGBUF_UNIT_SIZE - p,
+      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
+#else
+  p[0] = '\0'; // the upstream llvm does not support loongarch32r
+#endif
+
+  int i;
+  p = rb->buffer[rb->wr_ptr] + 45;
+  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
+  for(i = ilen - 1; i >= 0; i--) {
+	p += snprintf(p, 4, " %02x", inst[i]);
+  }
+
+  rb->wr_ptr = (rb->wr_ptr + 1) % rb->length;
 }

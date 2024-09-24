@@ -17,6 +17,7 @@
 #define __SDB_H__
 
 #include <common.h>
+#include <cpu/decode.h>
 
 word_t expr(char *e, bool *success);
 // typedef struct watchpoint WP;
@@ -40,6 +41,7 @@ typedef struct iRingbuf {
 
 extern iRingbuf *rb;
 void free_iringbuf();
+void add_instruction(Decode *s);
 
 WP* new_wp();
 WP* find_wp (int wp_no, bool *success);

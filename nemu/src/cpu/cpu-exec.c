@@ -79,9 +79,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
 #endif
-  char *b = rb->buffer[rb->wr_ptr];
-  strcpy(b, s->logbuf);
-  puts(b);
+  add_instruction(s);
+  puts(rb->buffer[rb->wr_ptr]);
 }
 
 static void execute(uint64_t n) {
