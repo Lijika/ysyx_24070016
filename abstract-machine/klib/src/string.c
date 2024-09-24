@@ -69,7 +69,7 @@ void *memcpy(void *out, const void *in, size_t n) {
 int memcmp(const void *s1, const void *s2, size_t n) {
   const unsigned char *ch1 = (const unsigned char *)s1;
   const unsigned char *ch2 = (const unsigned char *)s2;
-  for(size_t i = 1; i < n; i++) {
+  for(size_t i = 0; i < n; i++) {
 	if(ch1[i] != ch2[i]) {
 	  return ch1[i] - ch2[i];
 	}
