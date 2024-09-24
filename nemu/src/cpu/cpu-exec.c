@@ -102,6 +102,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  print_ringbuffer();
   isa_reg_display();
   statistic();
 }
