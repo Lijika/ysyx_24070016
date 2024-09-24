@@ -55,9 +55,9 @@ void add_instruction(Decode *s) {
 }
 
 void print_ringbuffer() {
-  printf("//////////////////////////////");
+  printf("///////////////");
   printf("Print Instruction Ringbuffer");
-  printf("//////////////////////////////");
+  printf("///////////////\n");
 
   int i = 0;
   for(i = 0; i < IRINGBUF_LEN; i++) {
@@ -69,7 +69,7 @@ void print_ringbuffer() {
     }
     printf("%s\n", rb->buffer[i]);
   }
-  printf("//////////////////////////////");
+  printf("///////////////");
   printf("Print Instruction Ringbuffer");
-  printf("//////////////////////////////");
+  printf("///////////////\n");
 }
