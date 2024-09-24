@@ -77,7 +77,7 @@ int sprintf(char *out, const char *fmt, ...) {
         break;
       }
     }
-    // fmt += 2;
+    fmt += 2;
   }
   *out = '\0';
   va_end(ap);
