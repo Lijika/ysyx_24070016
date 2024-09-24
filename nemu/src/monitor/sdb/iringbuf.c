@@ -30,8 +30,18 @@ void add_instruction(Decode *s) {
   char *p = rb->buffer[rb->wr_ptr];
   p += snprintf(p, IRINGBUF_UNIT_SIZE, FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
-  printf("%d \n", (int)(p - rb->buffer[rb->wr_ptr]));
-
+  int i;
+  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
+  for(i = ilen - 1; i >= 0; i--) {
+	p += snprintf(p, 4, " %02x", inst[i]);
+  }
+  int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+  int space_len = ilen_max - ilen;
+  if (space_len < 0) space_len = 0;
+  space_len = space_len * 3 + 1;
+  memset(p, ' ', space_len);
+  p += space_len;
+  
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, rb->buffer[rb->wr_ptr] + IRINGBUF_UNIT_SIZE - p,
@@ -39,14 +49,6 @@ void add_instruction(Decode *s) {
 #else
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
-
-  int i;
-  p += 20;
-  p = rb->buffer[rb->wr_ptr] + 30;
-  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
-  for(i = ilen - 1; i >= 0; i--) {
-	p += snprintf(p, 4, " %02x", inst[i]);
-  }
 
   rb->wr_ptr = (rb->wr_ptr + 1) % rb->length;
 }
