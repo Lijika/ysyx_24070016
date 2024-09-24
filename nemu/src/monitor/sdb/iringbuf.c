@@ -39,13 +39,13 @@ void add_instruction(Decode *s) {
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
 
-  int i;
+//   int i;
   printf("%d", (int)(p - rb->buffer[rb->wr_ptr]));
 //   p = rb->buffer[rb->wr_ptr] + 30;
-  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
-  for(i = ilen - 1; i >= 0; i--) {
-	p += snprintf(p, 4, " %02x", inst[i]);
-  }
+//   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
+//   for(i = ilen - 1; i >= 0; i--) {
+// 	p += snprintf(p, 4, " %02x", inst[i]);
+//   }
 
   rb->wr_ptr = (rb->wr_ptr + 1) % rb->length;
 }
