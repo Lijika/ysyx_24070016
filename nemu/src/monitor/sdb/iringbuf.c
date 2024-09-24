@@ -27,7 +27,6 @@ void free_iringbuf() {
 }
 
 void add_instruction(Decode *s) {
-  printf("s->pc:0x%x \n", s->pc);
   char *p = rb->buffer[rb->wr_ptr];
   p += snprintf(p, IRINGBUF_UNIT_SIZE, FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
