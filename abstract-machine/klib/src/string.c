@@ -42,8 +42,10 @@ int strcmp(const char *s1, const char *s2) {
 	s1++;
 	s2++;
   }
+  unsigned char ch1 = *s1;
+  unsigned char ch2 = *s2;
 
-  return *(unsigned char*)s1 - *(unsigned char*)s2;
+  return ch1 - ch2;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
