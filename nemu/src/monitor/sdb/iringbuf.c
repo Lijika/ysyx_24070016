@@ -62,6 +62,6 @@ void print_ringbuffer() {
     } else {
       printf("\t");
     }
-    printf("%s", rb->buffer[i]);
+    printf("%s\n", rb->buffer[i]);
   }
 }
