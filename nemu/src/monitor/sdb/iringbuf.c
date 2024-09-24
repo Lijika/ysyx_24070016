@@ -40,7 +40,7 @@ void add_instruction(Decode *s) {
 #endif
 
 //   int i;
-  printf("%d", (int)(p - rb->buffer[rb->wr_ptr]));
+  printf("%d \n", (int)(p - rb->buffer[rb->wr_ptr]));
 //   p = rb->buffer[rb->wr_ptr] + 30;
 //   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
 //   for(i = ilen - 1; i >= 0; i--) {
