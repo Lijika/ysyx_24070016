@@ -30,6 +30,7 @@ void add_instruction(Decode *s) {
   char *p = rb->buffer[rb->wr_ptr];
   p += snprintf(p, IRINGBUF_UNIT_SIZE, FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
+  printf("%d \n", (int)(p - rb->buffer[rb->wr_ptr]));
 
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
