@@ -42,6 +42,7 @@ typedef struct iRingbuf {
 extern iRingbuf *rb;
 void free_iringbuf();
 void add_instruction(Decode *s);
+void print_ringbuffer();
 
 WP* new_wp();
 WP* find_wp (int wp_no, bool *success);

@@ -79,8 +79,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
 #endif
-  add_instruction(s);
-  puts(rb->buffer[rb->wr_ptr - 1]);
 }
 
 static void execute(uint64_t n) {
@@ -124,7 +122,8 @@ void cpu_exec(uint64_t n) {
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
-
+  
+  print_ringbuffer();
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 

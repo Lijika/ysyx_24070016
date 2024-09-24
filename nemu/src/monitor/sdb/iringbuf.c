@@ -41,7 +41,7 @@ void add_instruction(Decode *s) {
   space_len = space_len * 3 + 1;
   memset(p, ' ', space_len);
   p += space_len;
-  
+
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, rb->buffer[rb->wr_ptr] + IRINGBUF_UNIT_SIZE - p,
@@ -51,4 +51,17 @@ void add_instruction(Decode *s) {
 #endif
 
   rb->wr_ptr = (rb->wr_ptr + 1) % rb->length;
+}
+
+void print_ringbuffer() {
+  int i = 0;
+  for(i = 0; i < IRINGBUF_LEN; i++) {
+    bool current_exec_inst = ((i + 1) % IRINGBUF_LEN == rb->wr_ptr);
+    if(current_exec_inst) {
+      printf(" -->");
+    } else {
+      printf("\t");
+    }
+    printf("%s", rb->buffer[i]);
+  }
 }
