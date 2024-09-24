@@ -80,7 +80,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #endif
 #endif
   add_instruction(s);
-  puts(rb->buffer[rb->wr_ptr]);
+  puts(rb->buffer[rb->wr_ptr - 1]);
 }
 
 static void execute(uint64_t n) {
