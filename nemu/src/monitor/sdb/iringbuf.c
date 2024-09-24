@@ -58,9 +58,9 @@ void print_ringbuffer() {
   for(i = 0; i < IRINGBUF_LEN; i++) {
     bool current_exec_inst = ((i + 1) % IRINGBUF_LEN == rb->wr_ptr);
     if(current_exec_inst) {
-      printf(" --->");
+      printf("--->");
     } else {
-      printf("     ");
+      printf("    ");
     }
     printf("%s\n", rb->buffer[i]);
   }
