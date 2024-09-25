@@ -27,7 +27,6 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 //you can modify mtrace range
 #define MTRACE_LEFT PMEM_LEFT
 #define MTRACE_RIGHT PMEM_RIGHT
-extern log_mtrace_buffer *m;
 
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
