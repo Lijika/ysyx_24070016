@@ -63,7 +63,7 @@ void init_mem() {
 void update_mtrace_buffer(paddr_t addr, int size, bool is_read) {
 #ifdef CONFIG_MTRACE
   bool is_address_in_mtrace_range = ((addr >= MTRACE_LEFT) && (addr <= MTRACE_RIGHT));
-  if(!is_address_in_mtrace_range) return 0;
+  if(!is_address_in_mtrace_range) return;
   m->is_access_mem = 1;
   char *p = m->log;
   p += snprintf(p, sizeof(m->log), "Adrress:" FMT_PADDR "size: %d", addr, size);
