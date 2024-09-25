@@ -48,6 +48,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 	Log("Watchpoint triggered.\n");
   }
 #endif
+
+#ifdef CONFIG_MTRACE
+  if(m->is_access_mem) { log_write("          ##%s\n", m->log); }
+  m->is_access_mem = 0;
+#endif
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {

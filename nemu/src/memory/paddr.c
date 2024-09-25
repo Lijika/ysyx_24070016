@@ -24,6 +24,9 @@ static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
+//you can modify mtrace range
+#define MTRACE_LEFT PMEM_LEFT
+#define MTRACE_RIGHT PMEM_RIGHT
 
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
@@ -57,7 +60,23 @@ void init_mem() {
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
+void update_mtrace_buffer(paddr_t addr, int size, bool is_read) {
+#ifdef CONFIG_MTRACE
+  bool is_address_in_mtrace_range = ((addr >= MTRACE_LEFT) && (addr <= MTRACE_RIGHT));
+  if(!is_address_in_mtrace_range) return 0;
+  m->is_access_mem = 1;
+  char *p = m->log;
+  p += snprintf(p, sizeof(m->log), "Adrress:" FMT_PADDR "size: %d", addr, size);
+  if(is_read) {
+	*(++p) = 'r';
+  } else {
+	*(++p) = 'w';
+  }
+#endif
+}
+
 word_t paddr_read(paddr_t addr, int len) {
+  update_mtrace_buffer(addr, len, 1);
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -65,6 +84,7 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
+  update_mtrace_buffer(addr, len, 0);
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);

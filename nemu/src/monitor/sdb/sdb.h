@@ -44,6 +44,14 @@ void free_iringbuf();
 void add_instruction(Decode *s);
 void print_ringbuffer();
 
+#ifdef CONFIG_MTRACE
+typedef struct log_mtrace_buffer {
+  char log[128];
+  bool is_access_mem;
+} log_mtrace_buffer;
+log_mtrace_buffer *m;
+#endif
+
 WP* new_wp();
 WP* find_wp (int wp_no, bool *success);
 void free_wp(WP *wp);
