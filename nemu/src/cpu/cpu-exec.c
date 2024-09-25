@@ -33,7 +33,12 @@ static bool g_print_step = false;
 
 void device_update();
 
-static void trace_and_difftest(Decode *_this, vaddr_t dnpc, log_mtrace_buffer *m) {
+#ifdef CONFIG_MTRACE
+  static log_mtrace_buffer mbuffer;
+  log_mtrace_buffer *m = &mbuffer;
+#endif
+
+static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
@@ -88,15 +93,10 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
 static void execute(uint64_t n) {
   Decode s;
-#ifdef CONFIG_MTRACE
-  log_mtrace_buffer m_instance;
-  log_mtrace_buffer *m = &m_instance;
-  m->is_access_mem = 0;
-#endif
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
-    trace_and_difftest(&s, cpu.pc, m);
+    trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
