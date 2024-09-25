@@ -72,9 +72,9 @@ void update_mtrace_buffer(paddr_t addr, int size, bool is_read) {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  printf("in paddr_read before updata, m = %d", m->is_access_mem);
+  printf("in paddr_read before updata, m = %d\n", m->is_access_mem);
   update_mtrace_buffer(addr, len, 1);
-  printf("in paddr_read after updata, m = %d", m->is_access_mem);
+  printf("in paddr_read after updata, m = %d\n", m->is_access_mem);
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);

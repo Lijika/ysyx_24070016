@@ -63,7 +63,7 @@ static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
   s->dnpc = s->snpc;
-  printf("in decode_exec before exe, m = %d", m->is_access_mem);
+  printf("in decode_exec before exe, m = %d\n", m->is_access_mem);
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */ ) { \
@@ -124,7 +124,7 @@ static int decode_exec(Decode *s) {
   INSTPAT_END();
 
   R(0) = 0; // reset $zero to 0
-  printf("in decode_exec after exe, m = %d", m->is_access_mem);
+  printf("in decode_exec after exe, m = %d\n", m->is_access_mem);
   
   return 0;
 }
@@ -132,6 +132,6 @@ static int decode_exec(Decode *s) {
 int isa_exec_once(Decode *s) {
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
   add_instruction(s);
-  printf("in isa_exec_once m = %d", m->is_access_mem);
+  printf("in isa_exec_once m = %d\n", m->is_access_mem);
   return decode_exec(s);
 }
