@@ -55,7 +55,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
 
 #ifdef CONFIG_MTRACE
-  m->is_access_mem = 0;
+//   m->is_access_mem = 0;
   if(m->is_access_mem) { log_write("   #mtrace# %s\n", m->log); }
 #endif
 }
