@@ -49,7 +49,7 @@ typedef struct log_mtrace_buffer {
   char log[128];
   bool is_access_mem;
 } log_mtrace_buffer;
-log_mtrace_buffer *m;
+extern log_mtrace_buffer *m;
 #endif
 
 WP* new_wp();

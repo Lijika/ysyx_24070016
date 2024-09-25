@@ -88,6 +88,11 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
 static void execute(uint64_t n) {
   Decode s;
+#ifdef CONFIG_MTRACE
+  log_mtrace_buffer m_instance;
+  log_mtrace_buffer *m = &m_instance;
+  m->is_access_mem = 0;
+#endif
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
@@ -108,6 +113,7 @@ static void statistic() {
 
 void assert_fail_msg() {
   print_ringbuffer();
+  free_iringbuf();
   isa_reg_display();
   statistic();
 }
