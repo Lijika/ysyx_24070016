@@ -66,11 +66,11 @@ void update_mtrace_buffer(paddr_t addr, int size, bool is_read) {
   if(!is_address_in_mtrace_range) return;
   m->is_access_mem = 1;
   char *p = m->log;
-  p += snprintf(p, sizeof(m->log), "Adrress:" FMT_PADDR "size: %d", addr, size);
+  p += snprintf(p, sizeof(m->log), "Address:" FMT_PADDR "  size: %d", addr, size);
   if(is_read) {
-	*(++p) = 'r';
+	p = " r";
   } else {
-	*(++p) = 'w';
+	p = " w";
   }
 #endif
 }
