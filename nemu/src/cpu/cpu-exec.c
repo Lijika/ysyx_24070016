@@ -55,8 +55,10 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
 
 #ifdef CONFIG_MTRACE
-//   m->is_access_mem = 0;
+  printf("in trace before print, m = %d", m->is_access_mem);
   if(m->is_access_mem) { log_write("   #mtrace# %s\n", m->log); }
+  m->is_access_mem = 0;
+  printf("in trace after print, m = %d", m->is_access_mem);
 #endif
 }
 
@@ -64,6 +66,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   m->is_access_mem = 0;
+  printf("in exec_once m = %d", m->is_access_mem);
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
