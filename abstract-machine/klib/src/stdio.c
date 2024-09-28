@@ -77,7 +77,7 @@ int sprintf(char *out, const char *fmt, ...) {
         break;
       }
     }
-    fmt += 2;//注释掉这行能引起内存访问越界错误，可用于测试iringbuf
+    // fmt += 2;//注释掉这行能引起内存访问越界错误，可用于测试iringbuf
   }
   *out = '\0';
   va_end(ap);
