@@ -56,6 +56,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
 #ifdef CONFIG_MTRACE
   if(m->is_access_mem) { log_write("   #mtrace# %s\n", m->log); }
+  m->log[1] = '\0';
   m->is_access_mem = 0;
 #endif
 }
@@ -63,6 +64,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
+  m->is_access_mem = 0;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
