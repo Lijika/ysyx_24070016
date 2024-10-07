@@ -30,7 +30,7 @@ void init_elf(char *elf_file) {
 	fseek(fd, ehdr.e_shoff, SEEK_SET);
 	a = fread(shdr, sizeof(Elf32_Shdr) * ehdr.e_shnum, 1, fd);
 
-	printf("///%s ///\n", (char *)(&ehdr));
+	printf("///%s ///\n", (char *)(shdr + ehdr.e_shstrndx + shdr->sh_name));
 	assert(0);
 
 
