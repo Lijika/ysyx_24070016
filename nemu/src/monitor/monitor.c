@@ -85,7 +85,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
-	  case 'e': elf_file = optarg; break;
+	  case 'e': printf("///%s///", optarg); elf_file = optarg; init_elf(elf_file); break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
@@ -127,9 +127,6 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Initialize differential testing. */
   init_difftest(diff_so_file, img_size, difftest_port);
-
-  /* Initialize the elf file. */
-  init_elf(elf_file);
 
   /* Initialize the simple debugger. */
   init_sdb();
