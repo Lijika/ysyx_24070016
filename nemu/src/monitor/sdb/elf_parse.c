@@ -4,7 +4,7 @@
 void init_elf(char *elf_file) {
 	FILE *fd = fopen(elf_file, "r");
 	if(fd == NULL) {
-		printf("////////////////////////fail to open the elf file.\n");
+		printf("fail to open the elf file.\n");
 		assert(0);
 	}
 
