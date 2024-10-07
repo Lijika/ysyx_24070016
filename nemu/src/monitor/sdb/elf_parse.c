@@ -16,7 +16,7 @@ void init_elf(char *elf_file) {
 		printf("fail to read elf head.\n");
 		assert(0);
 	}
-	printf("\n//%d//\n", ehdr.e_shstrndx);
+	// printf("\n//%d//\n", ehdr.e_shstrndx);
 
 	if((ehdr.e_ident[0] != 0x7F) ||
 		ehdr.e_ident[1] != 'E' ||
@@ -30,7 +30,7 @@ void init_elf(char *elf_file) {
 	fseek(fd, ehdr.e_shoff, SEEK_SET);
 	a = fread(shdr, sizeof(Elf32_Shdr) * ehdr.e_shnum, 1, fd);
 
-	// printf("///%s ///\n", );
+	printf("///%s ///\n", (char *)(&ehdr + ehdr.e_shstrndx));
 	assert(0);
 
 
