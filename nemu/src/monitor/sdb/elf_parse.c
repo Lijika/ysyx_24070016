@@ -16,7 +16,7 @@ void init_elf(char *elf_file) {
 		printf("fail to read elf head.\n");
 		assert(0);
 	}
-	printf("%d", ehdr.e_shstrndx);
+	printf("\n//%d//\n", ehdr.e_shstrndx);
 
 	if((ehdr.e_ident[0] != 0x7F) ||
 		ehdr.e_ident[1] != 'E' ||
