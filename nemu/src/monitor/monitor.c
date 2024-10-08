@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <memory/paddr.h>
+#include <elf.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -45,6 +46,8 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static char *elf_file = NULL;
 static int difftest_port = 1234;
+Elf32_Sym *symtab_buf = NULL;
+char *strtab_buf = NULL;
 
 static long load_img() {
   if (img_file == NULL) {

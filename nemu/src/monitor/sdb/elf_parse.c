@@ -1,6 +1,8 @@
 #include <elf.h>
 #include <isa.h>
 
+
+
 char *read_elf_file(char *elf_file) {
 	FILE *fp = fopen(elf_file, "r");
 	if(fp == NULL) {
@@ -37,11 +39,24 @@ void init_elf(char *elf_file) {
 	}
 
 	Elf32_Shdr *shdr = (Elf32_Shdr *)(elf_buf + ehdr->e_shoff);
-	Elf32_Shdr *shdr_strtabhd = shdr + ehdr->e_shstrndx;
-	char *strtab = elf_buf + shdr_strtabhd->sh_offset;
+	Elf32_Shdr *shdr_shstrtab = shdr + ehdr->e_shstrndx;
+	char *shstrtab = elf_buf + shdr_shstrtab->sh_offset;
+	
+	int i;
+	// Elf32_Shdr *shdr_strtab = NULL;
+	// Elf32_Shdr *shdr_symtab = NULL;
+	for(i = 0; i < ehdr->e_shnum; i++) {
+		Elf32_Shdr *this_shdr = shdr + i;
+		char *section_name = shstrtab + this_shdr->sh_name;
+		if(strcmp(section_name, ".strtab") == 0) {
+			// shdr_strtab = this_shdr;
+		} else if(strcmp(section_name, ".symtab") == 0) {
+			// shdr_symtab = this_shdr;
+		}
+		printf("////%s////", section_name);
+	}
 
-	printf("///%x, %s ///\n", shdr_strtabhd->sh_offset, strtab + (shdr+8)->sh_name);
-	assert(0);
+	
 
 
 }
