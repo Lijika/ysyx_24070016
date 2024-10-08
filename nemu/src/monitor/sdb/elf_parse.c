@@ -15,7 +15,7 @@ char *read_elf_file(char *elf_file) {
 	a = fread(elf_buf, elf_size, 1, fp);
 	if(a == 0) {
 		printf("fail to read elf file\n");
-		assert(0);
+		// assert(0);
 	}
 
 	return elf_buf;
