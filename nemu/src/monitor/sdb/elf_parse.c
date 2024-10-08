@@ -63,7 +63,7 @@ void init_elf(char *elf_file) {
 	memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
 	Elf32_Sym *symbol_entry = symtab_buf;
-	printf("////%s////\n", strtab_buf + (symbol_entry + 32)->st_name);
+	printf("////%s////\n", strtab_buf + (symbol_entry + 34)->st_name);
 	
 	assert(0);
 
