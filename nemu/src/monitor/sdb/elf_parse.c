@@ -39,7 +39,7 @@ void init_elf(char *elf_file) {
 	Elf32_Shdr *shdr = (Elf32_Shdr *)(ehdr + ehdr->e_shoff);
 
 
-	printf("///%s ///\n", (char *)(shdr + ehdr->e_shstrndx + shdr->sh_name));
+	printf("///%s ///\n", (char *)(shdr));
 	assert(0);
 
 
