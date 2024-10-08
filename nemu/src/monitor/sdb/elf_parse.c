@@ -12,7 +12,7 @@ char *read_elf_file(char *elf_file) {
 	char *elf_buf = (char *)malloc(elf_size);
 	
 	int a;
-	a = fread(elf_buf, 1, elf_size, fp);
+	a = fread(elf_buf, elf_size, 1, fp);
 	if(a == 0) {
 		printf("fail to read elf file\n");
 		assert(0);
