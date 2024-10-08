@@ -40,7 +40,7 @@ void init_elf(char *elf_file) {
 	Elf32_Shdr *shdr_strtabhd = shdr + ehdr->e_shstrndx;
 	char *strtab = elf_buf + shdr_strtabhd->sh_offset;
 
-	printf("///%s ///\n", strtab + (shdr+1)->sh_name);
+	printf("///%d, %s ///\n", shdr_strtabhd->sh_offset, strtab + (shdr+1)->sh_name);
 	assert(0);
 
 
