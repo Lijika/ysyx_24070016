@@ -9,11 +9,10 @@ char *read_elf_file(char *elf_file) {
 	}
 	fseek(fp, 0, SEEK_END);
 	int elf_size = ftell(fp);
-	printf("///%d///\n", elf_size);
-	assert(0);
 	char *elf_buf = (char *)malloc(elf_size);
 	
 	int a;
+	rewind(fp);
 	a = fread(elf_buf, elf_size, 1, fp);
 	if(a == 0) {
 		printf("fail to read elf file\n");
