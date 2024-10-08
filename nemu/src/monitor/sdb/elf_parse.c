@@ -54,11 +54,17 @@ void init_elf(char *elf_file) {
 		} else if(strcmp(section_name, ".symtab") == 0) {
 			shdr_symtab = this_shdr;
 		}
-		printf("////%s////\n", section_name);
+		// printf("////%s////\n", section_name);
 	}
 
-	symtab_buf = (Elf32_Sym *)(elf_buf + shdr_symtab->sh_offset);
-	strtab_buf = elf_buf + shdr_strtab->sh_offset;
+	symtab_buf = (Elf32_Sym *)malloc(shdr_symtab->sh_size);
+	memcpy(symtab_buf, elf_buf + shdr_symtab->sh_offset, shdr_symtab->sh_size); 
+	strtab_buf = (char *)malloc(shdr_strtab->sh_size);
+	memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
+
+	Elf32_Sym *symbol_entry = symtab_buf;
+	printf("////%s////\n", strtab_buf + (symbol_entry + 32)->st_name);
+	
 	assert(0);
 
 
