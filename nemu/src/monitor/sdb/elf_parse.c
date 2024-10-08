@@ -53,7 +53,7 @@ void init_elf(char *elf_file) {
 		} else if(strcmp(section_name, ".symtab") == 0) {
 			// shdr_symtab = this_shdr;
 		}
-		printf("////%s////", section_name);
+		printf("////%s////\n", section_name);
 	}
 
 	
