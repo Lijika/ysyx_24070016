@@ -52,7 +52,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
 
 if(ftrace_monitor->state != NO_CALL) {
-  ftrace_run_onece(_this->pc, dnpc);
+  // ftrace_run_onece(_this->pc, dnpc);
 }
 
 #ifdef CONFIG_WATCHPOINT
