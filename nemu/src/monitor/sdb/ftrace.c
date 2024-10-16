@@ -77,7 +77,7 @@ void init_elf(char *elf_file) {
   memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
   printf("\n st num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
-  printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + 10)->st_name);
+  printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + 2)->st_name);
   assert(0);
 
   free(elf_buf);
