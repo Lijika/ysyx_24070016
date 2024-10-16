@@ -2,9 +2,12 @@
 #include "sdb.h"
 
 Elf32_Sym *symtab_buf = NULL;
+int symtab_entrynum;
 char *strtab_buf = NULL;
+
 ftrace_event ft = {NO_CALL, 0};
 ftrace_event *ftrace_monitor = &ft;
+
 char *ftrace_log_buf = NULL;
 
 char *read_elf_file(char *elf_file) {
@@ -68,14 +71,14 @@ void init_elf(char *elf_file) {
 
   symtab_buf = (Elf32_Sym *)malloc(shdr_symtab->sh_size);
   memcpy(symtab_buf, elf_buf + shdr_symtab->sh_offset, shdr_symtab->sh_size); 
+  symtab_entrynum = shdr_symtab->sh_size / shdr_symtab->sh_entsize;
+
   strtab_buf = (char *)malloc(shdr_strtab->sh_size);
   memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
-  printf("\n st num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
-  // printf("st num = %d", );
-
+  // printf("\n st num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
+  printf("func name = %s", strtab_buf + (symtab_buf + 1)->st_name);
   assert(0);
-
 
   free(elf_buf);
 }
@@ -105,7 +108,7 @@ void ftrace_identify_call_ret(int is_jal, int is_jalr, int rd, word_t src1) {
   }
 }
 
-void ftrace_onece_malloc(int call_depth, int func_name_size) {
+void new_ftrace_log(int call_depth, int func_name_size) {
   int len_inst = 12;                        //"0xxxxxxxx: " 12
   int len_func_type = 5;                    //"call " or "ret  " 4
   int len_jump_target = 13 + func_name_size;
@@ -113,17 +116,25 @@ void ftrace_onece_malloc(int call_depth, int func_name_size) {
   ftrace_log_buf = realloc(ftrace_log_buf, sizeof(ftrace_log_buf) + new_log);
 }
 
-// void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
-//   int call_depth = ftrace_monitor->call_depth;
-//   ftrace_monitor->call_depth = (ftrace_monitor->state == FUNC_CALL) ? 
-//                                 ++call_depth : --call_depth;
+void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
+  int call_depth = ftrace_monitor->call_depth;
+  ftrace_monitor->call_depth = (ftrace_monitor->state == FUNC_CALL) ? 
+                                ++call_depth : --call_depth;
   
-//   int i = symtab_buf->;
-//   for ()
+  int i;
+  for (i = 0; i < symtab_entrynum; i++) {
+    Elf32_Sym *cur_symtab = symtab_buf + i;
+    //STT_FUNC: 2
+    if(((cur_symtab->st_info) >> 4) == 2
+        && (dnpc >= cur_symtab->st_value
+        || dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
+        
+    }
+  }
 
 
 
 
 
-// }
+}
 
