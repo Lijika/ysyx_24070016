@@ -71,6 +71,9 @@ void init_elf(char *elf_file) {
   strtab_buf = (char *)malloc(shdr_strtab->sh_size);
   memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
+  printf("\n st num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
+  // printf("st num = %d", );
+
   assert(0);
 
 
