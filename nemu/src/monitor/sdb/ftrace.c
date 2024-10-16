@@ -26,7 +26,7 @@ char *read_elf_file(char *elf_file) {
   }
 
   a = fclose(fp);
-  if(a == 0) {
+  if(a != 0) {
     printf("fail to close elf file\n");
     assert(0);
   }
