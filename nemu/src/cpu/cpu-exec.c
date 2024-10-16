@@ -44,21 +44,28 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  
-#ifdef CONFIG_WATCHPOINT
-  bool hit = false;
-  scanf_wp_head (&hit);
-  if (hit) {
-	nemu_state.state = NEMU_STOP;
-	Log("Watchpoint triggered.\n");
-  }
-#endif
 
 #ifdef CONFIG_MTRACE
   if(m->is_access_mem) { log_write("   #mtrace# %s\n", m->log); }
   m->log[0] = '\0';
   m->is_access_mem = 0;
 #endif
+
+if(ftrace_monitor->state != NO_CALL) {
+  ftrace_run_onece(_this->pc, dnpc);
+}
+
+#ifdef CONFIG_WATCHPOINT
+  bool hit = false;
+  scanf_wp_head (&hit);
+  if (hit) {
+  nemu_state.state = NEMU_STOP;
+  Log("Watchpoint triggered.\n");
+  }
+#endif
+
+
+
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
