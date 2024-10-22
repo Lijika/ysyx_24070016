@@ -137,6 +137,8 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
+  printf("\ndnpc = %d\n", dnpc);
+  assert(0);
   int call_depth = ftrace_monitor->call_depth;
   int is_call = ftrace_monitor->state == FUNC_CALL;
   ftrace_monitor->call_depth = is_call ? 
@@ -150,7 +152,6 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
     if(((cur_symtab->st_info) >> 4) == 2
         && (dnpc >= cur_symtab->st_value
         && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
-        assert(0);
         target_func_name = strtab_buf + (symtab_buf + i)->st_name;
     }
   }
