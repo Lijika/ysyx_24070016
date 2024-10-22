@@ -77,7 +77,7 @@ typedef struct {
 
 extern ftrace_event *ftrace_monitor;
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc);
-
+void ftrace_log_print();
 
 
 #endif

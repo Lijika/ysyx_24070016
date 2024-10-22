@@ -53,6 +53,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
 if(ftrace_monitor->state != NO_CALL) {
   ftrace_run_onece(_this->pc, dnpc);
+  ftrace_monitor->state = NO_CALL;
 }
 
 #ifdef CONFIG_WATCHPOINT
@@ -63,9 +64,6 @@ if(ftrace_monitor->state != NO_CALL) {
   Log("Watchpoint triggered.\n");
   }
 #endif
-
-
-
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -109,6 +107,7 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
+  ftrace_log_print();
 }
 
 static void statistic() {

@@ -9,6 +9,7 @@ ftrace_event ft = {NO_CALL, 0};
 ftrace_event *ftrace_monitor = &ft;
 
 char *ftrace_log_buf = NULL;
+int len_log_buf = 0;
 
 char *read_elf_file(char *elf_file) {
   FILE *fp = fopen(elf_file, "r");
@@ -76,9 +77,9 @@ void init_elf(char *elf_file) {
   strtab_buf = (char *)malloc(shdr_strtab->sh_size);
   memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
-  printf("\n st num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
-  printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + 23)->st_name);
-  assert(0);
+  // printf("\nst num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
+  // printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + 23)->st_name);
+  // assert(0);
 
   free(elf_buf);
 }
@@ -108,33 +109,52 @@ void ftrace_identify_call_ret(int is_jal, int is_jalr, int rd, word_t src1) {
   }
 }
 
-void new_ftrace_log(int call_depth, int func_name_size) {
-  int len_inst = 12;                        //"0xxxxxxxx: " 12
-  int len_func_type = 5;                    //"call " or "ret  " 4
-  int len_jump_target = 13 + func_name_size;
-  int new_log = len_inst + len_func_type + len_jump_target + 1;
-  ftrace_log_buf = realloc(ftrace_log_buf, sizeof(ftrace_log_buf) + new_log);
+void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, vaddr_t dnpc) {
+  int len_pc = ((sizeof(vaddr_t) * 8) / 4) + 4; //"0xxxxxxxx: " 12
+  int len_func_type = 5;                        //"call " or "ret  " 4
+  int len_jump_target = len_pc + 2 + strlen(func_name);
+  int new_log = len_pc + len_func_type + len_jump_target + 1; //+1 "\n"
+  
+  //alloc one ftrace message
+  ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
+  char *cur_log_position = ftrace_log_buf + len_log_buf;
+  len_log_buf = len_log_buf + new_log;
+  
+  sprintf(cur_log_position, FMT_WORD ": ", pc);
+  cur_log_position += len_pc;
+  memset(cur_log_position, ' ', call_depth * 2);
+  cur_log_position += call_depth * 2;
+  if(is_call) {
+    sprintf(cur_log_position, "call ");
+  } else {
+    sprintf(cur_log_position, "ret  ");
+  }
+  cur_log_position += len_func_type;
+  sprintf(cur_log_position, "[%s@" FMT_WORD "]", func_name, dnpc);
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
   int call_depth = ftrace_monitor->call_depth;
-  ftrace_monitor->call_depth = (ftrace_monitor->state == FUNC_CALL) ? 
+  int is_call = ftrace_monitor->state == FUNC_CALL;
+  ftrace_monitor->call_depth = is_call ? 
                                 ++call_depth : --call_depth;
-  
+
   int i;
+  char *target_func_name = "???";
   for (i = 0; i < symtab_entrynum; i++) {
-    Elf32_Sym *cur_symtab = symtab_buf + i;
+    Elf32_Sym *cur_symtab = &symtab_buf[i];
     //STT_FUNC: 2
     if(((cur_symtab->st_info) >> 4) == 2
         && (dnpc >= cur_symtab->st_value
-        || dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
-        
+        && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
+        target_func_name = strtab_buf + (symtab_buf + i)->st_name;
     }
   }
 
-
-
-
+  new_ftrace_log(pc, ftrace_monitor->call_depth, is_call, target_func_name, dnpc);
 
 }
 
+void ftrace_log_print() {
+  log_write("ftrace message: \n%s\n", ftrace_log_buf);
+}
