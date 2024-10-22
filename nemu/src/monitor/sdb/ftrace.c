@@ -134,7 +134,6 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   }
   cur_log_position += len_func_type;
   printf("\nfunc_name:%s\n", func_name);
-  assert(0);
   sprintf(cur_log_position, "[%s@" FMT_WORD "]\n", func_name, dnpc);
 }
 
@@ -159,7 +158,15 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
   new_ftrace_log(pc, ftrace_monitor->call_depth, is_call, target_func_name, dnpc);
 
 }
+void free_ftrace() {
+  free(symtab_buf);
+  free(strtab_buf);
+  free(ftrace_log_buf);
+}
 
 void ftrace_log_print() {
   log_write("ftrace message: \n%s\n", ftrace_log_buf);
+  free_ftrace();
 }
+
+
