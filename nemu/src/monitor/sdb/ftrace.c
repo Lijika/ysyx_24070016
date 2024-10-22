@@ -152,7 +152,7 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
     //STT_FUNC: 2
     if((ELF32_ST_TYPE(cur_symtab->st_info) == STT_FUNC)
         && (dnpc >= cur_symtab->st_value
-        && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
+        && dnpc < (cur_symtab->st_value + cur_symtab->st_size))) {
         target_func_name = strtab_buf + (symtab_buf + i)->st_name;
         printf("\n%s\n", target_func_name);
         // assert(0);
