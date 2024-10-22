@@ -121,6 +121,10 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
 
   //alloc one ftrace message
   ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
+  if (ftrace_log_buf == NULL) {
+  perror("realloc failed");
+  exit(1);
+  }
   char *cur_log_position = ftrace_log_buf + len_log_buf;
   len_log_buf = len_log_buf + new_log;
   
