@@ -110,13 +110,11 @@ void ftrace_identify_call_ret(int is_jal, int is_jalr, int rd, word_t src1) {
 }
 
 void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, vaddr_t dnpc) {
-  printf("\ncall_depth: %d\n", call_depth);
-  assert(0);
   int len_pc = ((sizeof(vaddr_t) * 8) / 4) + 4; //"0xxxxxxxx: " 12
-  // int len_call_depth = call_depth - 1;
+  int len_call_depth = (call_depth - 1) * 2;
   int len_func_type = 5;                        //"call " or "ret  " 4
   int len_jump_target = len_pc + 2 + strlen(func_name);
-  int new_log = len_pc + len_func_type + len_jump_target + 1; //+1 "\n"
+  int new_log = len_pc + len_call_depth + len_func_type + len_jump_target + 1; //+1 "\n"
   
   //alloc one ftrace message
   ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
@@ -125,8 +123,8 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   
   sprintf(cur_log_position, FMT_WORD ": ", pc);
   cur_log_position += len_pc;
-  memset(cur_log_position, ' ', call_depth * 2);
-  cur_log_position += call_depth * 2;
+  memset(cur_log_position, ' ', len_call_depth * 2);
+  cur_log_position += len_call_depth * 2;
   if(is_call) {
     sprintf(cur_log_position, "call ");
   } else {
