@@ -139,8 +139,6 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
-  printf("\ndnpc =" FMT_WORD "\n", dnpc);
-  assert(0);
   int call_depth = ftrace_monitor->call_depth;
   int is_call = ftrace_monitor->state == FUNC_CALL;
   ftrace_monitor->call_depth = is_call ? 
