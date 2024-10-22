@@ -119,9 +119,10 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
   char *cur_log_position = ftrace_log_buf + len_log_buf;
   len_log_buf = len_log_buf + new_log;
-  assert(0);
+  
   sprintf(cur_log_position, FMT_WORD ": ", pc);
   cur_log_position += len_pc;
+  assert(0);
   memset(cur_log_position, ' ', call_depth * 2);
   cur_log_position += call_depth * 2;
   if(is_call) {
@@ -130,7 +131,7 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
     sprintf(cur_log_position, "ret  ");
   }
   cur_log_position += len_func_type;
-  sprintf(cur_log_position, "[%s@" FMT_WORD "]", func_name, dnpc);
+  sprintf(cur_log_position, "[%s@" FMT_WORD "]\n", func_name, dnpc);
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
