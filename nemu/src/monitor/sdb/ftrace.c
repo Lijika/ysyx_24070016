@@ -150,6 +150,7 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
     if(((cur_symtab->st_info) >> 4) == 2
         && (dnpc >= cur_symtab->st_value
         && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
+        assert(0);
         target_func_name = strtab_buf + (symtab_buf + i)->st_name;
     }
   }
