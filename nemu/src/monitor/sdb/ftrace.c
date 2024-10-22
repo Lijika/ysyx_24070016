@@ -155,9 +155,10 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
         && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
         target_func_name = strtab_buf + (symtab_buf + i)->st_name;
         printf("\n%s\n", target_func_name);
-        assert(0);
+        // assert(0);
     }
   }
+  printf("\n%s\n", target_func_name);
 
   new_ftrace_log(pc, ftrace_monitor->call_depth, is_call, target_func_name, dnpc);
 
