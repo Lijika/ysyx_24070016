@@ -78,7 +78,7 @@ void init_elf(char *elf_file) {
   memcpy(strtab_buf, elf_buf + shdr_strtab->sh_offset, shdr_strtab->sh_size);
 
   // printf("\nst num = %d \n", shdr_symtab->sh_size / shdr_symtab->sh_entsize);
-  // printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + 23)->st_name);
+  // printf("\nfunc name = %s\n", strtab_buf + (symtab_buf + )->st_name);
   // assert(0);
 
   free(elf_buf);
@@ -137,7 +137,7 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
-  printf("\ndnpc = %x08\n", dnpc);
+  printf("\ndnpc =" FMT_WORD "\n", dnpc);
   assert(0);
   int call_depth = ftrace_monitor->call_depth;
   int is_call = ftrace_monitor->state == FUNC_CALL;
