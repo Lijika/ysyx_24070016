@@ -1,6 +1,8 @@
 #include <isa.h>
 #include "sdb.h"
 
+#define STT_FUNC 2
+
 Elf32_Sym *symtab_buf = NULL;
 int symtab_entrynum;
 char *strtab_buf = NULL;
@@ -149,10 +151,11 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
   for (i = 0; i < symtab_entrynum; i++) {
     Elf32_Sym *cur_symtab = &symtab_buf[i];
     //STT_FUNC: 2
-    if(((cur_symtab->st_info) >> 4) == 2
+    if((ELF32_ST_TYPE(cur_symtab->st_info) == STT_FUNC)
         && (dnpc >= cur_symtab->st_value
         && dnpc <= (cur_symtab->st_value + cur_symtab->st_size))) {
         target_func_name = strtab_buf + (symtab_buf + i)->st_name;
+        assert(0);
     }
   }
 
