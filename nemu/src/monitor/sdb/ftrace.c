@@ -138,6 +138,7 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   // printf("\nnew_log = %d, len_log = %d, log: %s|\n", new_log, len_log_buf, ftrace_log_buf);
   // assert(0);
   sprintf(cur_log_position, "[%s@" FMT_WORD "]\n", func_name, dnpc);
+  printf("\n log:%s\n", ftrace_log_buf);
 }
 
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
