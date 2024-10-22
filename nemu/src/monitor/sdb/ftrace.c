@@ -115,7 +115,7 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   int len_pc = ((sizeof(vaddr_t) * 8) / 4) + 4; //"0xxxxxxxx: " 12
   int len_call_depth = (call_depth - 1) * 2;
   int len_func_type = 5;                        //"call " or "ret  " 4
-  int len_jump_target = len_pc + 2 + strlen(func_name);
+  int len_jump_target = len_pc + 1 + strlen(func_name);
   int new_log = len_pc + len_call_depth + len_func_type + len_jump_target + 1; //+1 "\n"
   printf("\npc:"FMT_WORD "dnpc:"FMT_WORD "\n", pc, dnpc);
   printf("pc=%d, calldep=%d, functype=%d, jump=%d, new=%d\n", len_pc, len_call_depth, len_func_type, len_jump_target, new_log);
