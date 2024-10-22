@@ -131,6 +131,8 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
     sprintf(cur_log_position, "ret  ");
   }
   cur_log_position += len_func_type;
+  printf("\nfunc_name:%s\n", func_name);
+  assert(0);
   sprintf(cur_log_position, "[%s@" FMT_WORD "]\n", func_name, dnpc);
 }
 
