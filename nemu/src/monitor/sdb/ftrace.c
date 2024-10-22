@@ -159,7 +159,7 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
     }
   }
   printf("\n%s\n", target_func_name);
-
+  assert(0);
   new_ftrace_log(pc, ftrace_monitor->call_depth, is_call, target_func_name, dnpc);
 
 }
