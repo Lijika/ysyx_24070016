@@ -131,8 +131,8 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   sprintf(cur_log_position, FMT_WORD ": ", pc);
   printf("pc = %s\n", cur_log_position);
   cur_log_position += len_pc;
-  memset(cur_log_position, ' ', len_call_depth * 2);
-  cur_log_position += len_call_depth * 2;
+  memset(cur_log_position, ' ', len_call_depth);
+  cur_log_position += len_call_depth;
   if(is_call) {
     sprintf(cur_log_position, "call ");
   } else {
