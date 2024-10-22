@@ -114,7 +114,7 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   int len_func_type = 5;                        //"call " or "ret  " 4
   int len_jump_target = len_pc + 2 + strlen(func_name);
   int new_log = len_pc + len_func_type + len_jump_target + 1; //+1 "\n"
-  
+  assert(0);
   //alloc one ftrace message
   ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
   char *cur_log_position = ftrace_log_buf + len_log_buf;
