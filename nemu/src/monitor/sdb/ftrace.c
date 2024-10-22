@@ -117,7 +117,8 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
   int len_func_type = 5;                        //"call " or "ret  " 4
   int len_jump_target = len_pc + 2 + strlen(func_name);
   int new_log = len_pc + len_call_depth + len_func_type + len_jump_target + 1; //+1 "\n"
-  printf("\npc=%d, calldep=%d, functype=%d, jump=%d, new=%d\n", len_pc, len_call_depth, len_func_type, len_jump_target, new_log);
+  // printf("\npc=%d, calldep=%d, functype=%d, jump=%d, new=%d\n", len_pc, len_call_depth, len_func_type, len_jump_target, new_log);
+
   //alloc one ftrace message
   ftrace_log_buf = realloc(ftrace_log_buf, len_log_buf + new_log + 1);
   char *cur_log_position = ftrace_log_buf + len_log_buf;
@@ -133,9 +134,9 @@ void new_ftrace_log(vaddr_t pc, int call_depth, int is_call, char *func_name, va
     sprintf(cur_log_position, "ret  ");
   }
   cur_log_position += len_func_type;
-  printf("\nfunc_name = %s, len_func_name = %d\n", func_name, (int)strlen(func_name));
-  printf("\nnew_log = %d, len_log = %d, log: %s|\n", new_log, len_log_buf, ftrace_log_buf);
-  assert(0);
+  // printf("\nfunc_name = %s, len_func_name = %d\n", func_name, (int)strlen(func_name));
+  // printf("\nnew_log = %d, len_log = %d, log: %s|\n", new_log, len_log_buf, ftrace_log_buf);
+  // assert(0);
   sprintf(cur_log_position, "[%s@" FMT_WORD "]\n", func_name, dnpc);
 }
 
