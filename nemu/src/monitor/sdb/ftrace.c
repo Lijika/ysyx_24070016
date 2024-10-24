@@ -97,7 +97,6 @@ bool is_function_call(int is_jal, int is_jalr, int rd) {
 }
 
 bool is_function_ret(int is_jal, int is_jalr, int rd, word_t src1) {
-  assert(0);
   if((is_jalr == 1) && (rd == 0) && (src1 == 1 || src1 == 5)) {
     return true;
   }

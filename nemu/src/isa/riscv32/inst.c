@@ -129,7 +129,7 @@ static int decode_exec(Decode *s) {
   R(0) = 0; // reset $zero to 0
 
   if(is_jal || is_jalr) {
-    ftrace_identify_call_ret(is_jal, is_jalr, rd, src1);
+    ftrace_identify_call_ret(is_jal, is_jalr, rd, BITS(s->isa.inst.val, 19, 15));
   }
 
   return 0;
