@@ -107,6 +107,7 @@ void ftrace_identify_call_ret(int is_jal, int is_jalr, int rd, word_t src1) {
   if(is_function_call(is_jal, is_jalr, rd)) {
     ftrace_monitor->state = FUNC_CALL;
   } else if(is_function_ret(is_jal, is_jalr, rd, src1)) {
+    assert(0);
     ftrace_monitor->state = FUNC_RET;
   }
 }
