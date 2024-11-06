@@ -33,19 +33,35 @@ static bool g_print_step = false;
 
 void device_update();
 
+#ifdef CONFIG_MTRACE
+  static log_mtrace_buffer mbuffer;
+  log_mtrace_buffer *m = &mbuffer;
+#endif
+
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  
+
+#ifdef CONFIG_MTRACE
+  if(m->is_access_mem) { log_write("   #mtrace# %s\n", m->log); }
+  m->log[0] = '\0';
+  m->is_access_mem = 0;
+#endif
+
+if(ftrace_monitor->state != NO_CALL) {
+  ftrace_run_onece(_this->pc, dnpc);
+  ftrace_monitor->state = NO_CALL;
+}
+
 #ifdef CONFIG_WATCHPOINT
   bool hit = false;
   scanf_wp_head (&hit);
   if (hit) {
-	nemu_state.state = NEMU_STOP;
-	Log("Watchpoint triggered.\n");
+  nemu_state.state = NEMU_STOP;
+  Log("Watchpoint triggered.\n");
   }
 #endif
 }
@@ -53,6 +69,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
+  m->is_access_mem = 0;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
@@ -90,6 +107,7 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
+  ftrace_log_print();
 }
 
 static void statistic() {
@@ -102,6 +120,8 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  print_ringbuffer();
+  free_iringbuf();
   isa_reg_display();
   statistic();
 }

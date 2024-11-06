@@ -190,7 +190,7 @@ int check_parentheses(int p, int q) {
 int search_main_token_position (int p, int q) {
 	int main_token_position = 0;
 	int priority = 0;
-	// if (tokens[p].type == TK_DEREF) return p;
+	if (tokens[p].type == TK_DEREF) return p;
 
 	while (q >= p){
 		if (tokens[q].type == ')') {
@@ -272,14 +272,21 @@ word_t eval(int p, int q) {
      */
     return eval(p + 1, q - 1);
   }
-  else if ((p == q - 1) && (tokens[p].type == TK_DEREF)) {
-	paddr_t addr = strtol(tokens[q].str, NULL, 16);
-	return paddr_read(addr, 1);
-  }
+//   else if ((p == q - 1) && (tokens[p].type == TK_DEREF)) {
+// 	paddr_t addr = strtol(tokens[q].str, NULL, 16);
+// 	return paddr_read(addr, 1);
+//   }
   else {
     int op = search_main_token_position(p, q);
-    int val1 = eval(p, op - 1);
-    int val2 = eval(op + 1, q);
+	int addr = 0;
+	int val1 = 0;
+	int val2 = 0;
+	if(tokens[op].type == TK_DEREF) {
+		addr = eval(op + 1, q);
+	} else {
+		val1 = eval(p, op - 1);
+    	val2 = eval(op + 1, q);
+	}
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
@@ -289,6 +296,8 @@ word_t eval(int p, int q) {
 	  case TK_EQ: return val1 == val2;
 	  case TK_NEQ: return val1 != val2;
 	  case TK_AND: return val1 && val2;
+	  case TK_DEREF: return paddr_read(addr, 1);
+	       
       default: assert(0);
     }
   }

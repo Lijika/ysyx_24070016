@@ -18,7 +18,12 @@
 #include "../local-include/reg.h"
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  return false;
+  bool check_res = false;
+  for(int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); i++) {
+    check_res = difftest_check_reg(reg_name(i), pc, ref_r->gpr[i], gpr(i));
+    if(check_res == false) break;
+  }
+  return check_res;
 }
 
 void isa_difftest_attach() {
