@@ -38,6 +38,7 @@ static word_t pmem_read(paddr_t addr, int len) {
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
+  // Log("[nemu] write data = "FMT_WORD "\n", pmem_read(addr, 4));
 }
 
 static void out_of_bound(paddr_t addr) {
@@ -72,7 +73,9 @@ void update_mtrace_buffer(paddr_t addr, int size, bool is_read) {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
+#ifdef CONFIG_MTRACE
   if(m->is_access_mem) update_mtrace_buffer(addr, len, 1);
+#endif
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -80,7 +83,9 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
+#ifdef CONFIG_MTRACE
   if(m->is_access_mem) update_mtrace_buffer(addr, len, 0);
+#endif
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);

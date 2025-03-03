@@ -173,9 +173,18 @@ void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc) {
 
 }
 void free_ftrace() {
-  free(symtab_buf);
-  free(strtab_buf);
-  free(ftrace_log_buf);
+  if (symtab_buf != NULL) {
+    free(symtab_buf);
+    symtab_buf = NULL;  
+  }
+  if (strtab_buf != NULL) {
+    free(strtab_buf);
+    strtab_buf = NULL; 
+  }
+  if (ftrace_log_buf != NULL) {
+    free(ftrace_log_buf);
+    ftrace_log_buf = NULL;
+  }
 }
 
 void ftrace_log_print() {

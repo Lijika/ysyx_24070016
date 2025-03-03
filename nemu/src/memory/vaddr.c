@@ -25,5 +25,7 @@ word_t vaddr_read(vaddr_t addr, int len) {
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
+  // Log("[nemu]: addr = "FMT_PADDR", len = %d, " "data = "FMT_WORD, addr, len, data);
   paddr_write(addr, len, data);
+
 }
