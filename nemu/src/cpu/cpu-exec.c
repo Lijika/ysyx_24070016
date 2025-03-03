@@ -51,10 +51,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   m->is_access_mem = 0;
 #endif
 
+#ifdef CONFIG_FTRACE
 if(ftrace_monitor->state != NO_CALL) {
   ftrace_run_onece(_this->pc, dnpc);
   ftrace_monitor->state = NO_CALL;
 }
+#endif
 
 #ifdef CONFIG_WATCHPOINT
   bool hit = false;
@@ -69,7 +71,9 @@ if(ftrace_monitor->state != NO_CALL) {
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
+#ifdef CONFIG_MTRACE
   m->is_access_mem = 0;
+#endif
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
@@ -107,7 +111,9 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
+#ifdef CONFIG_FTRACE
   ftrace_log_print();
+#endif
 }
 
 static void statistic() {

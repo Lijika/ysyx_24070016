@@ -79,5 +79,6 @@ extern ftrace_event *ftrace_monitor;
 void ftrace_run_onece(vaddr_t pc, vaddr_t dnpc);
 void ftrace_log_print();
 
-
+//dtrace
+void dtrace_log(uint32_t pc, const char *dev, uint32_t addr,int len, uint32_t data, bool is_write);
 #endif
