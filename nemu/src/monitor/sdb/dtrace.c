@@ -13,24 +13,11 @@ typedef struct {
   uint64_t min_interval;  // 最小时间间隔 (us)
 } DeviceTrace;
 
+#ifdef CONFIG_DEVICE
 static DeviceTrace device_table[MAX_DEVICES] = {
   {"rtc", CONFIG_RTC_MMIO, true, false, 0, 0, 1000000},         // RTC 设备 (只记录读，每 1s 记录一次)
   {"serial", CONFIG_SERIAL_MMIO, false, true, 0, 0, 1000000},    // 串口 (只记录写，每 1s 记录一次)
 };
-
-// void dtrace_log(uint32_t pc, const char *dev, const char *op, uint32_t addr, int size, uint32_t data) {
-//   rtc_read_count ++;
-//   uint64_t now = get_time();
-//   if (data == last_rtc_data) return; // 数据相同则跳过
-//   last_rtc_data = data;
-  
-//   if (now - last_rtc_trace_time < 1000010) return; // 1s 内不重复记录
-//   last_rtc_trace_time = now;
-
-//   Log("[dtrace] PC="FMT_WORD" | DEV=%-6s | %s | Addr="FMT_PADDR" | Size=%d | Data="FMT_WORD" | Count=%d",
-//          pc, dev, op, addr, size, data, rtc_read_count);
-//   rtc_read_count = 0;
-// }
 
 void dtrace_log(uint32_t pc, const char *dev, uint32_t addr,int len, uint32_t data, bool is_write) {
   uint64_t now = get_time();
@@ -67,3 +54,5 @@ void dtrace_log(uint32_t pc, const char *dev, uint32_t addr,int len, uint32_t da
     }
   }
 }
+
+#endif

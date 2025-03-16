@@ -1,6 +1,7 @@
 #include <include/common.h>
 #include "sdb.h"
 
+#ifdef CONFIG_ITRACE
 Itrace_log itrace_log;
 
 static void itrace_once(Itrace_log *s) {
@@ -24,3 +25,5 @@ void itrace() {
   itrace_once(&itrace_log);
   puts(itrace_log.logbuf);
 }
+
+#endif

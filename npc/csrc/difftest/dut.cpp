@@ -2,7 +2,7 @@
 
 #include <include/common.h>
 #include <include/difftest/difftest.h>
-#include "../memory/paddr.h"
+#include <include/memory/paddr.h>
 #include "../isa/reg.h"
 
 void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) = NULL;
@@ -10,6 +10,8 @@ void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 static void checkmem(uint8_t *ref_m, vaddr_t pc);
+
+#ifdef CONFIG_DIFFTEST
 
 static bool is_skip_ref = false;
 static int skip_dut_nr_inst = 0;
@@ -134,6 +136,9 @@ void difftest_step(vaddr_t pc, vaddr_t dnpc) {
     return;
   }
 
+  // printf("difftest pc = "FMT_WORD" is skip ref = %d \n", npc.pc, (int)is_skip_ref);
+  // // assert(npc.pc != 0x80001200);
+
   if (is_skip_ref) {
     // to skip the checking of an instruction, just copy the reg state to reference design
     ref_difftest_regcpy(&npc, DIFFTEST_TO_REF);
@@ -155,3 +160,7 @@ void difftest_step(vaddr_t pc, vaddr_t dnpc) {
 //isa difftest
 void isa_difftest_attach() {
 }
+#else
+void init_difftest(char *ref_so_file, long img_size, int port) { }
+
+#endif
