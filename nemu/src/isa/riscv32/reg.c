@@ -27,7 +27,7 @@ const char *regs[] = {
 
 void isa_reg_display() {
 	int i;
-	for (i = 0;i < ARRLEN(regs);i++){
+	for (i = 0;i < MUXDEF(CONFIG_RVE, 16, 32);i++){
 	printf("%s \t %#x \t %d \n", reg_name(i), gpr(i), gpr(i));
 	}
 }
@@ -41,4 +41,41 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 
 	*success = false;
 	return 0;
+}
+
+void isa_csr_display() {
+  printf("[csr] mepc: \t %#x \t %d \n", cpu.csr.mepc, cpu.csr.mepc);
+  printf("[csr] mstatus: \t %#x \t %d  \n", cpu.csr.mstatus, cpu.csr.mstatus);
+  printf("[csr] mcause: \t %#x \t %d  \n", cpu.csr.mcause, cpu.csr.mcause);
+  printf("[csr] mtvec: \t %#x \t %d  \n", cpu.csr.mtvec, cpu.csr.mtvec);
+}
+
+void isa_csr_write(word_t index, word_t wdata) {
+  switch (index) {
+    case 0x300:
+      cpu.csr.mstatus = wdata; break;
+    case 0x305:
+      cpu.csr.mtvec = wdata; break;
+    case 0x341:
+      cpu.csr.mepc = wdata; break;
+    case 0x342:
+      cpu.csr.mcause = wdata; break;
+    default:
+      assert(0);
+  }
+}
+
+word_t isa_csr_read(word_t index) {
+  switch (index) {
+    case 0x300:
+      return cpu.csr.mstatus;
+    case 0x305:
+      return cpu.csr.mtvec;
+    case 0x341:
+      return cpu.csr.mepc;
+    case 0x342:
+      return cpu.csr.mcause;
+    default:
+      assert(0);
+  }
 }

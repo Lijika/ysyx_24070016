@@ -1,17 +1,20 @@
 module ysyx_24070016_IFU (
 	input clk,
   input rst,
+  input [1:0] branch_intr,
   input [2:0] sel_branch,
   input zero, less,
   input [31:0] reg_rs1,
   input [31:0] dec_imm,
+  input [31:0] csr_mepc,
+  input [31:0] csr_mtvec,
 
   output [31:0] pc,
   output [31:0] sim_dnpc,
   output [31:0] inst
 );
 
-wire [31:0] nextpc;
+wire [31:0] nextpc = (branch_intr == 2'b0) ? pc_adder : pc_intr;
 assign sim_dnpc = nextpc;
 ysyx_24070016_Reg #(32, 32'h80000000)u_ysyx_24070016_PCreg(
 	.clk	(clk     ),
@@ -59,7 +62,11 @@ ysyx_24070016_MuxKey #(2, 1, 32) u_ysyx_24070016_pcsrc2_mux(
         1'b1, reg_rs1
   } )
 );
-assign nextpc = pcsrc1 + pcsrc2;
+wire [31:0] pc_adder = pcsrc1 + pcsrc2;
+
+//branch intr
+wire [31:0] pc_intr = ({32{branch_intr[0]}} & csr_mtvec)
+                    | ({32{branch_intr[1]}} & csr_mepc);
 
 //dpic sdb fetch inst
 import "DPI-C" function void fetch_instruction(input int unsigned addr, output int unsigned rword);

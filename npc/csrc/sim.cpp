@@ -1,15 +1,13 @@
-#include "include/sim.h"
-#include "include/common.h"
-#include "./memory/paddr.h"
-#include "include/difftest/difftest.h"
+#include <include/sim.h>
+#include <include/common.h>
+#include <include/difftest/difftest.h>
+#include <include/memory/paddr.h>
 #include "sdb/sdb.h"
 
 VerilatedContext* contextp = NULL;
 VerilatedVcdC* tfp = NULL;
 bool ebreak_triggered = false;
 Vysyx_24070016_top* top = NULL;
-NPC_state npc;
-uint32_t *cpu_gpr = NULL;
 
 #define MAX_INST_TO_PRINT 10
 uint64_t g_nr_guest_inst = 0;
@@ -18,21 +16,29 @@ static bool g_print_step = false;
 void ebreak_detected(svBit ebreak);
 void reset_npc(int n);
 void npc_exec_once();
-void set_npc_state();
-void set_sim_state(int state, vaddr_t pc, int halt_ret);
-void set_npc_gpr_wrback();
+
+void device_update();
 
 static void trace() {
+#ifdef CONFIG_ITRACE
   if (g_print_step) itrace();
+#endif
+
+#ifdef CONFIG_DIFFTEST
+  difftest_step(npc.pc, npc.dnpc);  //difftest 
+#endif
 }
 
 void sim_init() { 
 	contextp = new VerilatedContext;
-	tfp = new VerilatedVcdC;
 	top = new Vysyx_24070016_top;
-	contextp->traceEverOn(true);
+
+#ifdef CONFIG_WAVETRACE
+  contextp->traceEverOn(true);
+  tfp = new VerilatedVcdC;
 	top->trace(tfp, 1);
 	tfp->open("npc_wave.vcd");
+#endif
 
   reset_npc(1);
 }
@@ -54,24 +60,14 @@ void sim_finish() {
 }
 
 void dump_wave() {
+#ifdef CONFIG_WAVETRACE
   contextp->timeInc(1);
   tfp->dump(contextp->time());
+#endif
 }
 
 static void statistic() {
   Log("total guest instructions = %ld", g_nr_guest_inst);
-}
-
-void ebreak_detected(svBit ebreak) {
-  if (ebreak) {
-    set_sim_state(SIM_END, npc.pc, 0);
-    ebreak_triggered = true;
-  }
-}
-
-extern "C" void fetch_instruction(uint32_t raddr, uint32_t *rword) {
-  *rword = paddr_read(raddr, 4);
-  itrace_log.inst = paddr_read(raddr, 4);
 }
 
 void reset_npc(int n) {
@@ -99,7 +95,7 @@ void npc_exec_once() {
   // 时钟上升沿：设置为 1
   top->clk = 1;
   top->eval();
-  // set_npc_gpr_wrback();
+  // difftest_step(npc.pc, npc.dnpc);  //difftest 
   set_npc_state();
   top->rst = 0;
   top->eval();
@@ -122,15 +118,15 @@ void npc_exec(uint64_t n) {
   }
 
   while(n--) {
+    npc_exec_once();
+    // assert(npc.pc != 0x800011fc);
+
+    set_npc_state();
+    g_nr_guest_inst++;
+    trace();
     if(sim_state.state != SIM_RUNNING) break;
     if(ebreak_triggered) break;
-    npc_exec_once();
-    set_npc_state();
-    // assert(0);
-    // difftest_step(npc.pc, npc.dnpc);
-    g_nr_guest_inst++;
-    difftest_step(npc.pc, npc.dnpc);
-    trace();
+    IFDEF(CONFIG_DEVICE, device_update());
   }
 
   switch (sim_state.state) {
@@ -147,38 +143,11 @@ void npc_exec(uint64_t n) {
   }
 }
 
-// set cpu_gpr point to your cpu's gpr
-extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
-  cpu_gpr = (uint32_t *)(((VerilatedDpiOpenVar*)r)->datap());
-}
-
-void set_npc_state() {
-  npc.pc = top->cur_pc;
-  npc.dnpc = top->sim_dnpc;
-  memcpy(&npc.gpr[0], cpu_gpr, 4 * MUXDEF(CONFIG_RVE, 16, 32));
-}
-
-void set_npc_gpr_wrback() {
-  memcpy(&npc.gpr[0], cpu_gpr, 4 * MUXDEF(CONFIG_RVE, 16, 32));
-}
-
-void set_sim_state(int state, vaddr_t pc, int halt_ret) {
-  // difftest_skip_ref();
-  sim_state.state = state;
-  sim_state.halt_pc = pc;
-  sim_state.halt_ret = halt_ret;
-}
-
-extern "C" int npc_datamem_read(int raddr, char rmask) {
-  // 总是读取地址为`raddr & ~0x3u`的4字节返回
-  // raddr = raddr & ~0x3u;
-  return paddr_read(raddr, (int)rmask);
-}
-
-extern "C" void npc_datapmem_write(int waddr, int wdata, char wmask) {
-  // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
-  // `wmask`中每比特表示`wdata`中1个字节的掩码,
-  // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
-  // waddr = waddr & ~0x3u;
-  paddr_write(waddr, (int)wmask, wdata);
-}
+void assert_fail_msg() {
+  #ifdef CONFIG_ITRACE
+    // print_ringbuffer();
+    // free_iringbuf();
+  #endif
+    isa_reg_display();
+    statistic();
+  }

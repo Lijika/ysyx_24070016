@@ -1,5 +1,7 @@
-#include "paddr.h"
-#include "include/common.h"
+#include <include/common.h>
+#include <include/memory/host.h>
+#include <include/memory/paddr.h>
+#include <include/device/mmio.h>
 
 static inline uint32_t inst_fetch(vaddr_t pc, int len);
 static word_t pmem_read(paddr_t addr, int len);
@@ -11,10 +13,6 @@ uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
-
-static inline bool in_pmem(paddr_t addr) {
-  return (addr >= CONFIG_MBASE) && (addr < (paddr_t)CONFIG_MBASE + CONFIG_MSIZE);
-}
 
 static void out_of_bound(paddr_t addr) {
   panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
@@ -38,7 +36,7 @@ static void pmem_write(paddr_t addr, int len, word_t data) {
 word_t paddr_read(paddr_t addr, int len) {
   // if(m->is_access_mem) update_mtrace_buffer(addr, len, 1);
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
-  // IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
+  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 0;
 }
@@ -46,29 +44,8 @@ word_t paddr_read(paddr_t addr, int len) {
 void paddr_write(paddr_t addr, int len, word_t data) {
   // if(m->is_access_mem) update_mtrace_buffer(addr, len, 0);
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
-  // IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
+  IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
-}
-
-//host
-static inline word_t host_read(void *addr, int len) {
-  switch (len) {
-    case 1: return *(uint8_t  *)addr;
-    case 2: return *(uint16_t *)addr;
-    case 4: return *(uint32_t *)addr;
-    IFDEF(CONFIG_ISA64, case 8: return *(uint64_t *)addr);
-    default: assert(0);
-  }
-}
-
-static inline void host_write(void *addr, int len, word_t data) {
-  switch (len) {
-    case 1: *(uint8_t  *)addr = data; return;
-    case 2: *(uint16_t *)addr = data; return;
-    case 4: *(uint32_t *)addr = data; return;
-    IFDEF(CONFIG_ISA64, case 8: *(uint64_t *)addr = data; return);
-    // IFDEF(CONFIG_RT_CHECK, default: assert(0));
-  }
 }
 
 int init_pmem() {
@@ -76,17 +53,17 @@ int init_pmem() {
     //addi指令测试：
 		0x01000093,		//li	ra,16
     0xfbb00793,
-    // 0x00f0c193,   //xori x3, x1, 15
-    // 0xff200113,   //li  sp,-14
+    0x00f0c193,   //xori x3, x1, 15
+    0xff200113,   //li  sp,-14
     // 0x00209863,   //beq ra sp ebreak
 
-    0xfff0a193,     //slti x3, x1, -1
-    0xfff12193,    //slti x3, x2, -1   1
-    0x0010b193,    //sltiu x3, x1, 1
-    0x0140b193,   //sltiu x3, x1, 20   1
-		0x01008113,		//addi	sp,ra,16
-		0x01f08113,		//addi	sp,ra,31
-    0x001101b3,   //add x3, x2, x1
+    // 0xfff0a193,     //slti x3, x1, -1
+    // 0xfff12193,    //slti x3, x2, -1   1
+    // 0x0010b193,    //sltiu x3, x1, 1
+    // 0x0140b193,   //sltiu x3, x1, 20   1
+		// 0x01008113,		//addi	sp,ra,16
+		// 0x01f08113,		//addi	sp,ra,31
+    // 0x001101b3,   //add x3, x2, x1
 		0x00100073		//ebreak
 
 

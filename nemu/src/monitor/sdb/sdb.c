@@ -74,7 +74,7 @@ static int cmd_info(char *args) {
 	} 
 
 	switch (*args) {
-		case 'r': isa_reg_display(); break;
+		case 'r': isa_reg_display(); isa_csr_display(); break;
 		case 'w': wp_display(); break;
 		default: printf("Unknown command 'info %s'\n", args); break;
 	}
@@ -303,8 +303,9 @@ void init_sdb() {
   /* Initialize the watchpoint pool. */
   init_wp_pool();
 
+#ifdef CONFIG_ITRACE
   /* Initialize the instruction ring buffer.*/
   init_iringbuf();
-
+#endif
   
 }

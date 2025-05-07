@@ -5,6 +5,7 @@
 
 iRingbuf *rb;
 
+#ifdef CONFIG_ITRACE
 void init_iringbuf() {
   rb = (iRingbuf *)malloc(sizeof(iRingbuf));
   rb->buffer = (char **)malloc(IRINGBUF_LEN * sizeof(char *));
@@ -73,3 +74,5 @@ void print_ringbuffer() {
   printf("Print Instruction Ringbuffer");
   printf("///////////////\n");
 }
+
+#endif

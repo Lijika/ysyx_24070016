@@ -1,9 +1,9 @@
 #include <getopt.h>
 
-#include "include/common.h"
+#include <include/memory/paddr.h>
+#include <include/common.h>
+#include <include/disasm.h>
 #include "sdb.h"
-#include "../memory/paddr.h"
-#include "include/disasm.h"
 
 static char *log_file = NULL;
 static char *diff_so_file = NULL;
@@ -12,6 +12,7 @@ static char *elf_file = NULL;
 static int difftest_port = 1234;
 
 void init_difftest(char *ref_so_file, long img_size, int port);
+void init_device();
 
 static void welcome() {
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
@@ -85,6 +86,9 @@ void init_monitor(int argc, char *argv[]) {
   parse_args(argc, argv);
 
   init_pmem();
+
+  /* Initialize devices. */
+  IFDEF(CONFIG_DEVICE, init_device());
 
   init_log(log_file);
 

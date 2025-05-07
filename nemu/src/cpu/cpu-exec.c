@@ -126,8 +126,10 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+#ifdef CONFIG_ITRACE
   print_ringbuffer();
   free_iringbuf();
+#endif
   isa_reg_display();
   statistic();
 }

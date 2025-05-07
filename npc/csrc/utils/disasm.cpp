@@ -3,6 +3,8 @@
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
+#ifdef CONFIG_ITRACE
+
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCDisassembler/MCDisassembler.h"
@@ -92,3 +94,5 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int
   assert((int)s.length() - skip < size);
   strcpy(str, p);
 }
+
+#endif

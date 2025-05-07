@@ -1,4 +1,4 @@
-#include "include/common.h"
+#include <include/common.h>
 
 SIMState sim_state = { .state = SIM_STOP };
 

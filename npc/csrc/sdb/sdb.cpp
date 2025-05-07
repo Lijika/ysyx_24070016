@@ -2,10 +2,10 @@
 #include <readline/history.h>
 #include <stdbool.h>
 
+#include <include/common.h>
+#include <include/sim.h>
 #include "sdb.h"
-#include "include/common.h"
-#include "include/sim.h"
-#include "../memory/paddr.h"
+#include <include/memory/paddr.h>
 
 static int is_batch_mode = false;
 

@@ -11,8 +11,11 @@ module ysyx_24070016_IDU (
   output [1:0] sel_alusrc2,
   output [3:0] sel_aluop, 
   output [2:0] sel_branch,
+  output [1:0] branch_intr,
   output [2:0] sel_memop,
-  output sel_memtoreg,
+  output [1:0] sel_wb_to_reg,
+  output sel_csrt_is_rs1,
+  output [1:0] csr_op,
   output mem_valid,
   output mem_wren,
 	output ebreak
@@ -57,6 +60,11 @@ wire func3_111 = (func3 == 3'b111);
 //func7
 wire func7_0000000 = (func7 == 7'b0000000);
 wire func7_0100000 = (func7 == 7'b0100000);
+wire func7_0011000 = (func7 == 7'b0011000);
+
+//func12
+wire func12_000000000000 = (inst[31:20] == 12'b0);
+wire func12_000000000001 = (inst[31:20] == 12'b1);
 
 //inst type
 wire [4:0] num_type;
@@ -81,6 +89,7 @@ wire inst_and   = func7_0000000 & func3_111 & op_op;
 wire inst_sll   = func7_0000000 & func3_001 & op_op;
 wire inst_srl   = func7_0000000 & func3_101 & op_op;
 wire inst_sra   = func7_0100000 & func3_101 & op_op;
+wire inst_mret  = func7_0011000 & func3_000 & op_SYSTEM;
 //i type
 wire inst_addi  =                 func3_000 & op_imm;
 wire inst_jalr  =                 func3_000 & op_jalr;
@@ -97,6 +106,9 @@ wire inst_lh    =                 func3_001 & op_laod;
 wire inst_lw    =                 func3_010 & op_laod;
 wire inst_lbu   =                 func3_100 & op_laod;
 wire inst_lhu   =                 func3_101 & op_laod;
+wire inst_csrrw =                 func3_001 & op_SYSTEM;
+wire inst_csrrs =                 func3_010 & op_SYSTEM;
+wire inst_ecall = func12_000000000000 & (dec_rs2 == 5'b0) &func3_000 & (dec_rd == 5'b0) & op_SYSTEM;
 //s type
 wire inst_sb    =                 func3_000 & op_store;
 wire inst_sh    =                 func3_001 & op_store;
@@ -114,6 +126,7 @@ wire inst_lui   =                             op_lui;
 //j type
 wire inst_jal   =                             op_jal;
 
+// wire inst_ebreak = func12_000000000001 & (dec_rs2 == 5'b0) &func3_000 & (dec_rd == 5'b0) & op_SYSTEM;
 wire inst_ebreak = op_SYSTEM & func3_000 & EBREAK & (dec_rs1 == 5'b0) & (dec_rd == 5'b0);
 
 /************************
@@ -133,17 +146,19 @@ assign dec_imm = imm;
 ************************/
 assign ebreak = inst_ebreak;
 assign rf_wen = op_imm | op_op | op_laod
-              | inst_auipc | inst_lui | inst_jal | inst_jalr;
+              | inst_auipc | inst_lui | inst_jal | inst_jalr | inst_csrrw | inst_csrrs;
 
 //alusrc
 wire alusrc2_00 = inst_beq | inst_bne | op_op | op_branch;
 wire alusrc2_01 = inst_auipc | inst_lui | op_imm | op_laod | op_store;
 wire alusrc2_10 = inst_jal | inst_jalr;
+wire alusrc2_11 = inst_csrrw | inst_csrrs;
 
 assign sel_alusrc1 = inst_auipc | inst_jal | inst_jalr;
 assign sel_alusrc2 = ({2{alusrc2_00}} & 2'b00)
                    | ({2{alusrc2_01}} & 2'b01)
-                   | ({2{alusrc2_10}} & 2'b10);
+                   | ({2{alusrc2_10}} & 2'b10)
+                   | ({2{alusrc2_11}} & 2'b11);
 
 //aluop
 wire aluop_0000 = inst_addi | inst_auipc | inst_jal | inst_jalr | inst_add | op_laod | op_store;
@@ -152,7 +167,7 @@ wire aluop_0011 = inst_lui;
 wire aluop_0010 = inst_beq | inst_bne | inst_slti | inst_slt | inst_blt | inst_bge;
 wire aluop_1010 = inst_sltiu | inst_sltu | inst_bltu | inst_bgeu;
 wire aluop_0100 = inst_xori | inst_xor;
-wire aluop_0110 = inst_ori | inst_or;
+wire aluop_0110 = inst_ori | inst_or | inst_csrrs;
 wire aluop_0111 = inst_andi | inst_and;
 wire aluop_0001 = inst_slli | inst_sll;
 wire aluop_0101 = inst_srli | inst_srl;
@@ -171,6 +186,7 @@ assign sel_aluop = ({4{aluop_0000}} & 4'b0000)
 
 //branch
 // wire branch_000 = inst_addi | inst_auipc | inst_lui | inst_add | inst_slti;
+assign branch_intr = {inst_mret, inst_ecall};
 wire branch_001 = inst_jal;
 wire branch_010 = inst_jalr;
 wire branch_100 = inst_beq;
@@ -185,6 +201,8 @@ assign sel_branch = ({3{branch_001}} & 3'b001)
                   | ({3{branch_111}} & 3'b111);
 
 //mem
+assign mem_valid = op_laod | op_store;
+assign mem_wren = op_store;
 wire memop_000 = inst_lb | inst_sb;
 wire memop_001 = inst_lh | inst_sh;
 wire memop_100 = inst_lbu;
@@ -196,9 +214,19 @@ assign sel_memop = ({3{memop_000}} & 3'b000)
                  | ({3{memop_101}} & 3'b101)
                  | ({3{memop_010}} & 3'b010);
 
-assign sel_memtoreg = op_laod;
-assign mem_valid = op_laod | op_store;
-assign mem_wren = op_store;
+//csr
+assign sel_csrt_is_rs1 = inst_csrrw;
+assign csr_op[0] = inst_csrrs | inst_csrrw;
+assign csr_op[1] = inst_ecall;
+
+//write back sel
+wire wb_to_reg_01 = op_laod;
+wire wb_to_reg_10 = inst_csrrw | inst_csrrs;
+assign sel_wb_to_reg = ({2{wb_to_reg_01}} & 2'b01)
+                     | ({2{wb_to_reg_10}} & 2'b10);
+
+
+
 
 /* verilator lint_off UNUSEDSIGNAL */
 endmodule

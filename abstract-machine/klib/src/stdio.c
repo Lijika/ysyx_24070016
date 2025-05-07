@@ -44,6 +44,42 @@ int int2str(int num, char *str) {
   return len;
 }
 
+int long2str(long num, char *str) {
+  char buffer[32];
+  int i = 0;
+  int is_neg = 0;
+
+  if (num == 0) {
+      str[0] = '0';
+      return 1;
+  }
+
+  unsigned long unum;
+  if (num < 0) {
+      is_neg = 1;
+      unum = (unsigned long)(-num);
+  } else {
+      unum = (unsigned long)num;
+  }
+
+  while (unum > 0) {
+      buffer[i++] = (unum % 10) + '0';
+      unum /= 10;
+  }
+
+  if (is_neg) {
+      buffer[i++] = '-';
+  }
+
+  int len = i;
+  for (int j = 0; j < len; j++) {
+      str[j] = buffer[len - j - 1];
+  }
+
+  return len;
+}
+
+
 int printf(const char *fmt, ...) {
   // panic("Not implemented");
 
@@ -114,6 +150,29 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             ch_num++;
         }
         fmt++;
+        break;
+      }
+      case 'l': {
+        fmt++;  // 跳过 'l'
+        if (*fmt == 'd') {  // 处理 %ld 格式符
+          long num = va_arg(ap, long);
+          char num_buffer[32];
+          int num_len = long2str(num, num_buffer);
+
+          int padding = width - num_len;
+          if (padding > 0) {
+            for (int i = 0; i < padding; i++) {
+              *(out++) = zero_pad ? '0' : ' ';
+              ch_num++;
+            }
+          }
+
+          for (int i = 0; i < num_len; i++) {
+            *(out++) = num_buffer[i];
+            ch_num++;
+          }
+          fmt++;
+        }
         break;
       }
       case 'c': {
